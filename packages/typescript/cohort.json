@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "0eaaa8a516deb9c56054ecaf78ddf95803d016b7",
+    "path": "api-reference/openapi.json",
+    "sha256": "2cc659ca6cbe527373690cf140e6fb084fa6add50114371a5e8fb82203f52373"
+  },
+  "generator": {
+    "name": "openapi-typescript",
+    "version": "7.13.0"
+  },
+  "typescript": "5.9.3",
+  "baseUrl": "https://api.bota.dev/v1",
+  "paths": [
+    "/auth/identity",
+    "/end-users",
+    "/end-users/{id}",
+    "/devices",
+    "/devices/{id}",
+    "/recordings",
+    "/recordings/{id}",
+    "/transcriptions",
+    "/transcriptions/{id}",
+    "/summaries",
+    "/summaries/{id}"
+  ],
+  "projectionSha256": "873e4b7db33fc026f5dd585d109375395512d031fdae12cb08748640fe4aca65"
+}

@@ -1,0 +1,79 @@
+name: License Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'packages/typescript/**'
+      - 'scripts/check-licenses.mjs'
+      - '.github/workflows/license-gate.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'package.json'
+      - 'package-lock.json'
+      - 'packages/typescript/**'
+      - 'scripts/check-licenses.mjs'
+      - '.github/workflows/license-gate.yml'
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  license:
+    name: Locked workspace dependency licenses
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Install exact Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.23.2'
+          package-manager-cache: false
+      - name: Provision checksum-pinned npm 11.17.0
+        id: npm
+        working-directory: ${{ runner.temp }}
+        run: |
+          tool_root="$RUNNER_TEMP/api-sdk-npm"
+          mkdir -p "$tool_root"
+          env -i PATH="$PATH" curl -q --proto '=https' --tlsv1.2 --fail --silent --show-error \
+            https://registry.npmjs.org/npm/-/npm-11.17.0.tgz --output "$tool_root/npm.tgz"
+          printf '%s  %s\n' \
+            '3eeaf18997b11070d313849268b23766b9db0068997dec9471073170fe43fa17f2b4d0337bf0f52330ee2274e7f5754b21b01052742e48f5c9c74d8b1e32ef43' \
+            "$tool_root/npm.tgz" | sha512sum --check --status
+          tar --extract --gzip --file "$tool_root/npm.tgz" --directory "$tool_root" --no-same-owner
+          printf 'cli=%s\n' "$tool_root/package/bin/npm-cli.js" >> "$GITHUB_OUTPUT"
+      - name: Frozen public install and installed license gate
+        env:
+          SDK_NPM_CLI: ${{ steps.npm.outputs.cli }}
+        run: |
+          test ! -e .npmrc
+          test ! -e packages/typescript/.npmrc
+          config_root="$RUNNER_TEMP/api-sdk-license-config"
+          mkdir -p "$config_root"
+          : > "$config_root/user.npmrc"
+          : > "$config_root/global.npmrc"
+          env -i PATH="$PATH" node "$SDK_NPM_CLI" ci --ignore-scripts --no-audit --no-fund \
+            --registry=https://registry.npmjs.org --update-notifier=false \
+            --userconfig="$config_root/user.npmrc" --globalconfig="$config_root/global.npmrc" \
+            --cache="$config_root/cache"
+          env -i PATH="$PATH" node --test scripts/check-licenses.test.mjs
+          env -i PATH="$PATH" node scripts/check-licenses.mjs

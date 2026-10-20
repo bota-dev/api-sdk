@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "status": "beta-generated-read-client-experimental",
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "0eaaa8a516deb9c56054ecaf78ddf95803d016b7",
+    "path": "api-reference/openapi.json",
+    "sha256": "2cc659ca6cbe527373690cf140e6fb084fa6add50114371a5e8fb82203f52373"
+  },
+  "projectionSha256": "873e4b7db33fc026f5dd585d109375395512d031fdae12cb08748640fe4aca65",
+  "schemaSha256": "e6abcec5768db89b950d31a260149be6cd9180824b0d636103e431bee3ff7e80",
+  "operationsSha256": "bff2327ee040442dc1732095571ae2f9bec212c7f6d2ad4f4c95a60e38572620",
+  "schemaProvenanceSha256": "836b4aa4765477bb2d7a864ea4ca0e865d0ad424fef1f4adcb9f59f39fa5cfed",
+  "generatorScriptSha256": "9e0d4a48022333596e46e6c0265b8e68a8bad99fe289d5579ef969676ec62052",
+  "rendererScriptSha256": "e3d473d507950fddcea6f872a51d2e5a3a75246099cdaa3ce01c4b63d2e61ed9",
+  "clientSourceSha256": "ca672733d089aeca95a4c6f9a4925bf08a5e5ef1793b805322c7f1385fb34ea1",
+  "entrySourceSha256": "f18ab574c027de14a1de748c8179beeefa6eee8d9c67f6543f5c7179da9e18d8",
+  "methodsSha256": "8baecde6e89fcfd2531a7b0fab1c8b491b15a91fde1b0c9476e703095530a3f8",
+  "operationCount": 11,
+  "typescript": "5.9.3"
+}

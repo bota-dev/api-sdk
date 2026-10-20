@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "noEmitOnError": true,
+    "declaration": true,
+    "declarationMap": false,
+    "sourceMap": false,
+    "incremental": false,
+    "rewriteRelativeImportExtensions": true,
+    "rootDir": ".",
+    "outDir": "./dist"
+  },
+  "include": ["index.ts", "runtime.ts", "generated/client.ts", "generated/schema.d.ts"]
+}

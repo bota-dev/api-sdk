@@ -1,0 +1,88 @@
+name: API SDK qualification
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+    working-directory: packages/typescript
+
+jobs:
+  qualify:
+    name: TypeScript source and packed consumers (Node 22 + 24)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out source without persisted credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Install exact Node 22
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22.23.2'
+          package-manager-cache: false
+      - name: Locate Node 22
+        id: node22
+        run: printf 'executable=%s\n' "$(node -p 'process.execPath')" >> "$GITHUB_OUTPUT"
+
+      - name: Install exact Node 24
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24.19.0'
+          package-manager-cache: false
+      - name: Locate Node 24
+        id: node24
+        run: printf 'executable=%s\n' "$(node -p 'process.execPath')" >> "$GITHUB_OUTPUT"
+
+      - name: Provision checksum-pinned npm 11.17.0
+        id: npm
+        working-directory: ${{ runner.temp }}
+        run: |
+          tool_root="$RUNNER_TEMP/api-sdk-npm"
+          mkdir -p "$tool_root"
+          env -i PATH="$PATH" curl -q --proto '=https' --tlsv1.2 --fail --silent --show-error \
+            https://registry.npmjs.org/npm/-/npm-11.17.0.tgz --output "$tool_root/npm.tgz"
+          printf '%s  %s\n' \
+            '3eeaf18997b11070d313849268b23766b9db0068997dec9471073170fe43fa17f2b4d0337bf0f52330ee2274e7f5754b21b01052742e48f5c9c74d8b1e32ef43' \
+            "$tool_root/npm.tgz" | sha512sum --check --status
+          tar --extract --gzip --file "$tool_root/npm.tgz" --directory "$tool_root" --no-same-owner
+          printf 'cli=%s\n' "$tool_root/package/bin/npm-cli.js" >> "$GITHUB_OUTPUT"
+
+      - name: Qualify frozen workspace and isolated consumers
+        env:
+          SDK_NODE22: ${{ steps.node22.outputs.executable }}
+          SDK_NODE24: ${{ steps.node24.outputs.executable }}
+          SDK_NPM_CLI: ${{ steps.npm.outputs.cli }}
+        run: |
+          "$SDK_NODE24" ci.mjs \
+            --npm-cli "$SDK_NPM_CLI" --node22 "$SDK_NODE22" --node24 "$SDK_NODE24"
+
+      - name: Lint maintained JavaScript
+        working-directory: .
+        run: env -i PATH="$PATH" node node_modules/eslint/bin/eslint.js . --max-warnings=0
+
+      - name: Preserve qualified candidate evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: api-sdk-qualification-${{ github.sha }}
+          path: packages/typescript/.package-artifacts/ci-*/*
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7

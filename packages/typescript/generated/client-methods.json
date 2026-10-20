@@ -1,0 +1,79 @@
+[
+  {
+    "method": "getAuthIdentity",
+    "operationId": "getAuthIdentity",
+    "httpMethod": "GET",
+    "path": "/auth/identity",
+    "inputRequired": false
+  },
+  {
+    "method": "getEndUsers",
+    "operationId": "getEndUsers",
+    "httpMethod": "GET",
+    "path": "/end-users",
+    "inputRequired": false
+  },
+  {
+    "method": "getEndUsersById",
+    "operationId": "getEndUsersById",
+    "httpMethod": "GET",
+    "path": "/end-users/{id}",
+    "inputRequired": true
+  },
+  {
+    "method": "getDevices",
+    "operationId": "getDevices",
+    "httpMethod": "GET",
+    "path": "/devices",
+    "inputRequired": false
+  },
+  {
+    "method": "getDevicesById",
+    "operationId": "getDevicesById",
+    "httpMethod": "GET",
+    "path": "/devices/{id}",
+    "inputRequired": true
+  },
+  {
+    "method": "getRecordings",
+    "operationId": "getRecordings",
+    "httpMethod": "GET",
+    "path": "/recordings",
+    "inputRequired": false
+  },
+  {
+    "method": "getRecordingsById",
+    "operationId": "getRecordingsById",
+    "httpMethod": "GET",
+    "path": "/recordings/{id}",
+    "inputRequired": true
+  },
+  {
+    "method": "getTranscriptions",
+    "operationId": "getTranscriptions",
+    "httpMethod": "GET",
+    "path": "/transcriptions",
+    "inputRequired": false
+  },
+  {
+    "method": "getTranscriptionsById",
+    "operationId": "getTranscriptionsById",
+    "httpMethod": "GET",
+    "path": "/transcriptions/{id}",
+    "inputRequired": true
+  },
+  {
+    "method": "getSummaries",
+    "operationId": "getSummaries",
+    "httpMethod": "GET",
+    "path": "/summaries",
+    "inputRequired": false
+  },
+  {
+    "method": "getSummariesById",
+    "operationId": "getSummariesById",
+    "httpMethod": "GET",
+    "path": "/summaries/{id}",
+    "inputRequired": true
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "id": "private-eleven-read-policy-v1",
+  "status": "private-synthetic-subset",
+  "authority": [
+    "Developer Toolchain Design sections 4.1 and 7",
+    "Implementation plan T04, T13 and T16; approved private read cohort"
+  ],
+  "operationIds": [
+    "getAuthIdentity",
+    "getEndUsers",
+    "getEndUsersById",
+    "getDevices",
+    "getDevicesById",
+    "getRecordings",
+    "getRecordingsById",
+    "getTranscriptions",
+    "getTranscriptionsById",
+    "getSummaries",
+    "getSummariesById"
+  ],
+  "request": {
+    "method": "GET",
+    "credentialSource": "Explicit synthetic caller provider, invoked per attempt.",
+    "redirect": "manual",
+    "credentials": "omit",
+    "cache": "no-store",
+    "encoding": "Expected URLs are readable examples. Compare origin and exact encoded pathname, plus the multiset of decoded query name/value pairs sorted by UTF-8 byte order; preserve duplicate pairs and value bytes. Equivalent key ordering, space encoding and unreserved query escaping are allowed across languages. Userinfo and fragments are forbidden. Within one runtime, repeated attempts to the same semantic target must retain exact URL bytes. Formats, calendar and cross-field admission remain backend checks."
+  },
+  "response": {
+    "successStatuses": [
+      200,
+      204
+    ],
+    "json": "Strict UTF-8 and JSON lexical parsing; JSON strings such as NaN remain strings.",
+    "numbers": "Quoted int8/numeric values remain strings. Corpus does not use unquoted integers outside interoperable JSON safe-integer range.",
+    "unknownFields": "Preserved. Fixtures are runtime transport checks, not public privacy projection or full response-schema validation.",
+    "headers": "Lowercase string map preserved and frozen by the TypeScript adapter; request ID conveniences do not change error bodies.",
+    "errors": "Current generic and billing envelopes retained; all attempted synthetic credentials and standard percent-encoded variants removed from error metadata and body keys/values."
+  },
+  "retry": {
+    "maxRetries": 2,
+    "defaultMaxRetries": 2,
+    "eligible": "Only explicit eleven-read allowlist: transport failures, interrupted 200 bodies, 502/503/504, or nonbilling 429 with usable Retry-After.",
+    "terminal": "Authentication/admission/ordinary errors, redirects, invalid successful JSON, oversized bodies, cancellation, deadlines, invalid input and pagination failures.",
+    "credentialRotation": "Each admitted attempt obtains a credential; provider must retain the intended principal. These fixtures do not infer opaque key identity.",
+    "fixtureAdvice": "Deterministic 0-second Retry-After only; exact jitter, HTTP-date, elapsed budgets and timer cleanup stay in existing retry.test.mjs."
+  },
+  "pagination": {
+    "operations": [
+      "getEndUsers",
+      "getDevices",
+      "getRecordings",
+      "getTranscriptions",
+      "getSummaries"
+    ],
+    "rules": [
+      "Preserve filters, limit, initial cursor and opaque continuation exactly.",
+      "Refuse malformed pages, absent/repeated continuation and configured bounds.",
+      "Yield only complete pages; early return requests no additional page.",
+      "Credential error redaction history spans all attempts and pages in the iterator."
+    ],
+    "limitations": "No snapshot, deduplication or backend database qualification."
+  },
+  "adapter": {
+    "typescript": "runner.test.mjs imports runtime.ts with native Node type stripping and injected fetch only.",
+    "fixtureValidation": "validate.mjs evaluates only the exported corpus schema keyword subset and rejects unsupported keywords it visits; it is not a general JSON Schema implementation.",
+    "script": "Each fetch consumes one explicit response/transport/cancellation step. No real network, filesystem response source, arbitrary code or external reference is permitted."
+  },
+  "excluded": [
+    "Full runtime acceptance, Python implementation/parity, named client methods and package consumer tests.",
+    "Deadline, backoff timing/jitter, HTTP-date grammar, lifecycle cleanup and native transport behavior; existing TypeScript tests own those checks.",
+    "Backend authorization, project isolation, current live behavior, public naming/licensing, publication, deployed documentation and CLI/MCP adoption.",
+    "Success-body secret redaction or full response schema validation."
+  ]
+}

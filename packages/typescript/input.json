@@ -1,0 +1,5084 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Bota API",
+    "description": "API for capturing, ingesting, and processing offline conversations via AI wearable devices",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Bota Support",
+      "email": "support@bota.dev"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.bota.dev/v1",
+      "description": "Production"
+    }
+  ],
+  "paths": {
+    "/auth/identity": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Get Project Credential Identity",
+        "description": "Read only the verified project secret/restricted key context without a business-read scope. Secret scopes are null with project_secret mode; restricted scopes are exact granted metadata, including an empty array. Other operation-specific admission still applies. The test-mode flag does not certify test/live data or billing isolation. No human identity, key material, expiry or OAuth authority is returned. Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "responses": {
+          "200": {
+            "description": "Verified project credential metadata",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Cache-Control": {
+                "schema": {
+                  "type": "string",
+                  "const": "no-store"
+                },
+                "description": "Identity responses must not be cached."
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectIdentity"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Project secret or restricted key required",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getAuthIdentity",
+        "x-bota-audience": "customer",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": []
+        }
+      }
+    },
+    "/end-users": {
+      "get": {
+        "tags": [
+          "End Users"
+        ],
+        "summary": "List End Users",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "maxLength": 255
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "external_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        ""
+                      ]
+                    },
+                    {
+                      "type": "string",
+                      "maxLength": 255,
+                      "format": "email"
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "email",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of end users",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EndUser"
+                      }
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "has_more"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination or supported date filters",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getEndUsers",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "end_users:read"
+          ]
+        }
+      }
+    },
+    "/end-users/{id}": {
+      "get": {
+        "tags": [
+          "End Users"
+        ],
+        "summary": "Get End User",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "End user details",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EndUser"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getEndUsersById",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted",
+          "end_user_token"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "end_users:read"
+          ],
+          "end_user_token": []
+        },
+        "x-bota-end-user-boundary": {
+          "subject": "end_user_id",
+          "path_parameter": "id",
+          "match": "exact",
+          "required": true
+        }
+      }
+    },
+    "/devices": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "List Devices",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "end_user_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 64
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "serial_number",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of devices",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Device"
+                      }
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "has_more"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination or supported date filters",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "A returned device no longer has configuration in the expected project",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getDevices",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "devices:read"
+          ]
+        }
+      }
+    },
+    "/devices/{id}": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "Get Device",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Device details",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Device"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getDevicesById",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "devices:read"
+          ]
+        }
+      }
+    },
+    "/recordings": {
+      "get": {
+        "tags": [
+          "Recordings"
+        ],
+        "summary": "List Recordings",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "end_user_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "device_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "streaming",
+                "uploaded",
+                "processing",
+                "completed",
+                "failed",
+                "integrity_failure"
+              ]
+            },
+            "required": false,
+            "name": "status",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?!0000)(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.(\\d{1,6}))?([Zz]|([+-])(0\\d|1[0-5]):([0-5]\\d))$",
+              "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Inclusive created_at bound; must be before end_date when both are supplied."
+            },
+            "required": false,
+            "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Inclusive created_at bound; must be before end_date when both are supplied.",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?!0000)(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.(\\d{1,6}))?([Zz]|([+-])(0\\d|1[0-5]):([0-5]\\d))$",
+              "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Exclusive created_at bound; must be after start_date when both are supplied."
+            },
+            "required": false,
+            "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Exclusive created_at bound; must be after start_date when both are supplied.",
+            "name": "end_date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of recordings with current processing statuses and total matching count",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/RecordingListItem"
+                      }
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": "string"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Count of all matching recordings before the page cursor is applied"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "has_more",
+                    "total"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination or supported date filters",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getRecordings",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "recordings:read"
+          ]
+        }
+      }
+    },
+    "/recordings/{id}": {
+      "get": {
+        "tags": [
+          "Recordings"
+        ],
+        "summary": "Get Recording",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recording details with an explicit nullable audio URL",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecordingDetail"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getRecordingsById",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "recordings:read"
+          ]
+        }
+      }
+    },
+    "/transcriptions": {
+      "get": {
+        "tags": [
+          "Transcriptions"
+        ],
+        "summary": "List Transcriptions",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "recording_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?!0000)(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.(\\d{1,6}))?([Zz]|([+-])(0\\d|1[0-5]):([0-5]\\d))$",
+              "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Inclusive created_at bound; must be before end_date when both are supplied."
+            },
+            "required": false,
+            "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Inclusive created_at bound; must be before end_date when both are supplied.",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?!0000)(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.(\\d{1,6}))?([Zz]|([+-])(0\\d|1[0-5]):([0-5]\\d))$",
+              "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Exclusive created_at bound; must be after start_date when both are supplied."
+            },
+            "required": false,
+            "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Exclusive created_at bound; must be after start_date when both are supplied.",
+            "name": "end_date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of transcriptions",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Transcription"
+                      }
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "has_more"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination or supported date filters",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getTranscriptions",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "transcriptions:read"
+          ]
+        }
+      }
+    },
+    "/transcriptions/{id}": {
+      "get": {
+        "tags": [
+          "Transcriptions"
+        ],
+        "summary": "Get Transcription",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Transcription details",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Transcription"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getTranscriptionsById",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "transcriptions:read"
+          ]
+        }
+      }
+    },
+    "/summaries": {
+      "get": {
+        "tags": [
+          "Summaries"
+        ],
+        "summary": "List Summaries",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "required": false,
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "allOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "string",
+                  "pattern": "^[^\\0]*$"
+                }
+              ],
+              "description": "Exact scalar text; NUL characters are not accepted."
+            },
+            "required": false,
+            "description": "Exact scalar text; NUL characters are not accepted.",
+            "name": "transcription_id",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?!0000)(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.(\\d{1,6}))?([Zz]|([+-])(0\\d|1[0-5]):([0-5]\\d))$",
+              "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Inclusive created_at bound; must be before end_date when both are supplied."
+            },
+            "required": false,
+            "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Inclusive created_at bound; must be before end_date when both are supplied.",
+            "name": "start_date",
+            "in": "query"
+          },
+          {
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "pattern": "^(?!0000)(\\d{4})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])[Tt]([01]\\d|2[0-3]):([0-5]\\d):([0-5]\\d)(?:\\.(\\d{1,6}))?([Zz]|([+-])(0\\d|1[0-5]):([0-5]\\d))$",
+              "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Exclusive created_at bound; must be after start_date when both are supplied."
+            },
+            "required": false,
+            "description": "RFC 3339 creation-time bound with zero to six fractional digits and Z or a numeric offset no greater than 15:59; date-only values are not accepted. Exclusive created_at bound; must be after start_date when both are supplied.",
+            "name": "end_date",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of summaries",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Summary"
+                      }
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "next_cursor": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "has_more"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid pagination or supported date filters",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getSummaries",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "summaries:read"
+          ]
+        }
+      }
+    },
+    "/summaries/{id}": {
+      "get": {
+        "tags": [
+          "Summaries"
+        ],
+        "summary": "Get Summary",
+        "description": "Error and header metadata describes the authenticated non-playground middleware chain. Header presence is conditional and does not imply cross-origin browser access; CORS policy applies.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Summary details",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Summary"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing, invalid, expired or revoked credential",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Credential type, restricted-key scope or exact-owner admission denied",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "423": {
+            "$ref": "#/components/responses/AuthenticatedReadOrganizationAccessQuarantined"
+          },
+          "429": {
+            "description": "Standard limiter, failed-authentication block or conditional billing-tier limit exceeded; envelopes differ by source",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              },
+              "Retry-After": {
+                "required": false,
+                "description": "Delay in seconds set only by the standard limiter when it rejects a request. Failed-authentication blocks and billing-tier 429 responses omit this header.",
+                "schema": {
+                  "type": "string",
+                  "pattern": "^[0-9]+$"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Error"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BillingRateLimitError"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected server or dependency failure",
+            "headers": {
+              "X-Request-Id": {
+                "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+              },
+              "RateLimit-Policy": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+              },
+              "RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+              },
+              "RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+              },
+              "RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+              },
+              "X-RateLimit-Limit": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+              },
+              "X-RateLimit-Remaining": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+              },
+              "X-RateLimit-Reset": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+              },
+              "X-RateLimit-Tier": {
+                "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "operationId": "getSummariesById",
+        "x-bota-audience": "customer",
+        "x-bota-authentication-cohort": "authenticated-non-playground",
+        "x-bota-accepted-key-types": [
+          "secret",
+          "restricted"
+        ],
+        "x-bota-scopes-by-key-type": {
+          "secret": [],
+          "restricted": [
+            "summaries:read"
+          ]
+        }
+      }
+    }
+  },
+  "components": {
+    "headers": {
+      "AuthenticatedReadXRequestId": {
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Opaque request correlation ID when request-ID middleware runs. Caller-supplied values are accepted; no generated-ID format is guaranteed."
+      },
+      "AuthenticatedReadRateLimitPolicy": {
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Standard limiter policy when evaluated, currently draft-6 quota/window syntax. This header does not establish billing-tier admission."
+      },
+      "AuthenticatedReadRateLimitLimit": {
+        "required": false,
+        "description": "Standard limiter request quota when evaluated.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "AuthenticatedReadRateLimitRemaining": {
+        "required": false,
+        "description": "Remaining requests in the standard limiter window when evaluated.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "AuthenticatedReadRateLimitReset": {
+        "required": false,
+        "description": "Seconds remaining until the standard limiter window resets, not an epoch timestamp.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "AuthenticatedReadXRateLimitLimit": {
+        "required": false,
+        "description": "Billing-tier request quota only when billing initializes, a limited tier resolves and its check succeeds; omitted for unlimited tiers, disabled billing or check failures.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "AuthenticatedReadXRateLimitRemaining": {
+        "required": false,
+        "description": "Remaining billing-tier requests when that limited-tier check succeeds.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "AuthenticatedReadXRateLimitReset": {
+        "required": false,
+        "description": "Billing-tier window reset as Unix epoch seconds, unlike the relative RateLimit-Reset header; present only after a limited-tier check succeeds.",
+        "schema": {
+          "type": "string",
+          "pattern": "^[0-9]+$"
+        }
+      },
+      "AuthenticatedReadXRateLimitTier": {
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Resolved billing tier when a limited-tier check succeeds. Unknown tier names can be returned; no closed tier enum is guaranteed."
+      }
+    },
+    "schemas": {
+      "ProjectIdentity": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string"
+              },
+              "organization_id": {
+                "type": "string"
+              },
+              "key_id": {
+                "type": "string"
+              },
+              "is_test_mode": {
+                "type": "boolean"
+              },
+              "key_type": {
+                "type": "string",
+                "enum": [
+                  "secret"
+                ]
+              },
+              "scope_mode": {
+                "type": "string",
+                "enum": [
+                  "project_secret"
+                ]
+              },
+              "scopes": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "project_id",
+              "organization_id",
+              "key_id",
+              "is_test_mode",
+              "key_type",
+              "scope_mode",
+              "scopes"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "project_id": {
+                "type": "string"
+              },
+              "organization_id": {
+                "type": "string"
+              },
+              "key_id": {
+                "type": "string"
+              },
+              "is_test_mode": {
+                "type": "boolean"
+              },
+              "key_type": {
+                "type": "string",
+                "enum": [
+                  "restricted"
+                ]
+              },
+              "scope_mode": {
+                "type": "string",
+                "enum": [
+                  "restricted"
+                ]
+              },
+              "scopes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "project_id",
+              "organization_id",
+              "key_id",
+              "is_test_mode",
+              "key_type",
+              "scope_mode",
+              "scopes"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "param": {
+                "type": "string"
+              },
+              "request_id": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "BillingRateLimitError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "rate_limit_exceeded"
+                ]
+              },
+              "code": {
+                "type": "string",
+                "enum": [
+                  "RATE_LIMIT_EXCEEDED"
+                ]
+              },
+              "message": {
+                "type": "string"
+              },
+              "details": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer"
+                  },
+                  "current": {
+                    "type": "integer"
+                  },
+                  "reset_at": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "tier": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "limit",
+                  "current",
+                  "reset_at",
+                  "tier"
+                ]
+              }
+            },
+            "required": [
+              "type",
+              "code",
+              "message",
+              "details"
+            ]
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "EndUser": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "eu_abc123"
+          },
+          "external_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "external_id",
+          "name",
+          "email",
+          "metadata",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "Device": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "dev_abc123"
+          },
+          "serial_number": {
+            "type": "string"
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "model": {
+            "type": "string",
+            "enum": [
+              "bota_pin",
+              "bota_note",
+              "bota_pin_pro"
+            ]
+          },
+          "firmware_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "binding_generation": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "mac_address": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "capabilities": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "unbound",
+              "bound"
+            ]
+          },
+          "end_user_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "battery_percent": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "storage_used_mb": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "storage_total_mb": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "signal_strength_dbm": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "last_heartbeat_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "recording_state": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {}
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "settings": {
+            "$ref": "#/components/schemas/DeviceSettings"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "serial_number",
+          "name",
+          "model",
+          "firmware_version",
+          "binding_generation",
+          "mac_address",
+          "capabilities",
+          "status",
+          "end_user_id",
+          "battery_percent",
+          "storage_used_mb",
+          "storage_total_mb",
+          "signal_strength_dbm",
+          "last_heartbeat_at",
+          "recording_state",
+          "metadata",
+          "settings",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "DeviceSettings": {
+        "type": "object",
+        "properties": {
+          "connection": {
+            "type": "object",
+            "properties": {
+              "enabled_connections": {
+                "type": "object",
+                "properties": {
+                  "wifi": {
+                    "type": "boolean"
+                  },
+                  "cellular": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "wifi",
+                  "cellular"
+                ]
+              },
+              "heartbeat_enabled_connections": {
+                "type": "object",
+                "properties": {
+                  "wifi": {
+                    "type": "boolean"
+                  },
+                  "cellular": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "wifi",
+                  "cellular"
+                ]
+              },
+              "upload_network_preference": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "wifi",
+                    "ble",
+                    "cellular"
+                  ]
+                }
+              },
+              "power_management": {
+                "type": "object",
+                "properties": {
+                  "wifi_idle_timeout_seconds": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "enum": [
+                          -1
+                        ]
+                      },
+                      {
+                        "type": "number",
+                        "enum": [
+                          0
+                        ]
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 10,
+                        "maximum": 2540
+                      }
+                    ]
+                  },
+                  "cellular_idle_timeout_seconds": {
+                    "anyOf": [
+                      {
+                        "type": "number",
+                        "enum": [
+                          -1
+                        ]
+                      },
+                      {
+                        "type": "number",
+                        "enum": [
+                          0
+                        ]
+                      },
+                      {
+                        "type": "integer",
+                        "minimum": 10,
+                        "maximum": 2540
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "wifi_idle_timeout_seconds",
+                  "cellular_idle_timeout_seconds"
+                ]
+              }
+            },
+            "required": [
+              "enabled_connections",
+              "heartbeat_enabled_connections",
+              "upload_network_preference",
+              "power_management"
+            ]
+          },
+          "upload": {
+            "type": "object",
+            "properties": {
+              "streaming_enabled": {
+                "type": "boolean"
+              },
+              "streaming_chunk_kb": {
+                "type": "integer",
+                "minimum": 64,
+                "maximum": 1024,
+                "description": "Stored target; released compatibility firmware uses a 512 KB full-chunk target"
+              },
+              "streaming_flush_interval_seconds": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255,
+                "description": "Partial-chunk timer in seconds; 0 disables time-based flush"
+              },
+              "daily_data_limit_mb": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 10000,
+                "description": "Stored target; not enforced by released compatibility firmware"
+              },
+              "allow_roaming": {
+                "type": "boolean",
+                "description": "Stored target; not enforced by released compatibility firmware"
+              },
+              "pause_on_low_battery": {
+                "type": "boolean",
+                "description": "Stored target; not enforced by released compatibility firmware"
+              },
+              "off_peak_hours": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "start": {
+                    "type": "string"
+                  },
+                  "end": {
+                    "type": "string"
+                  },
+                  "timezone": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "enabled",
+                  "start",
+                  "end",
+                  "timezone"
+                ],
+                "description": "Stored target; not enforced by released compatibility firmware"
+              }
+            },
+            "required": [
+              "streaming_enabled",
+              "streaming_chunk_kb",
+              "streaming_flush_interval_seconds",
+              "daily_data_limit_mb",
+              "allow_roaming",
+              "pause_on_low_battery",
+              "off_peak_hours"
+            ]
+          },
+          "processing": {
+            "type": "object",
+            "properties": {
+              "auto_transcription": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "provider": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "whisper",
+                          "deepgram",
+                          "assemblyai",
+                          "elevenlabs"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "auto_summary": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "provider": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "gemini",
+                          "openai",
+                          "claude"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "template": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 64
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "auto_embedding": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "auto_enhancement": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "cleanvoice"
+                    ]
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              }
+            },
+            "required": [
+              "auto_transcription",
+              "auto_summary",
+              "auto_embedding",
+              "auto_enhancement"
+            ]
+          },
+          "ota": {
+            "type": "object",
+            "properties": {
+              "auto_update": {
+                "type": "object",
+                "properties": {
+                  "enabled": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "enabled"
+                ]
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "legacy",
+                  "service"
+                ]
+              }
+            },
+            "required": [
+              "auto_update",
+              "source"
+            ]
+          },
+          "upload_security": {
+            "type": "object",
+            "properties": {
+              "encrypted_upload_policy": {
+                "type": "string",
+                "enum": [
+                  "legacy_allowed",
+                  "v2_preferred",
+                  "v2_required"
+                ]
+              }
+            },
+            "required": [
+              "encrypted_upload_policy"
+            ]
+          }
+        },
+        "required": [
+          "connection",
+          "upload",
+          "processing",
+          "ota",
+          "upload_security"
+        ]
+      },
+      "RecordingListItem": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Recording"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "transcription_status": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "processing",
+                      "completed",
+                      "failed"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "summary_status": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "processing",
+                      "completed",
+                      "failed"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "transcription_status",
+              "summary_status"
+            ]
+          }
+        ]
+      },
+      "Recording": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "rec_abc123"
+          },
+          "end_user_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "device_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "streaming",
+              "uploaded",
+              "processing",
+              "completed",
+              "failed",
+              "integrity_failure"
+            ]
+          },
+          "duration_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "file_size_bytes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "maxLength": 20,
+                "pattern": "^(0|-?[1-9][0-9]{0,18})$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Integer or canonical signed decimal string (up to 19 digits); raw PostgreSQL BIGINT values are strings. Preserve the string to avoid precision loss."
+          },
+          "recorded_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {}
+          },
+          "upload_method": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ble",
+                  "bluetooth_sync",
+                  "wifi_upload",
+                  "cellular_upload",
+                  "wifi_direct",
+                  "4g_direct",
+                  "import",
+                  "unknown"
+                ]
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "device",
+              "app_import",
+              "api_upload"
+            ]
+          },
+          "mime_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "content_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "content_sha256_verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Successful asynchronous server-side verification time; plaintext device OGG/Opus also requires valid media and declared length; null is not proof of failure"
+          },
+          "upload_contract": {
+            "type": "string",
+            "enum": [
+              "legacy_v1",
+              "stream_v1",
+              "coordinated_v1",
+              "byo_v1"
+            ],
+            "description": "Server-owned upload contract. Coordinated and BYO flows have their own admission and recovery contracts; their presence is not proof of enabled deployment. Not accepted on ordinary create.",
+            "readOnly": true
+          },
+          "recording_uuid": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid",
+            "description": "Stable device-side logical recording identity used for retry-safe creation"
+          },
+          "recording_generation": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string",
+                "pattern": "^[0-9]+$"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Generation of the stable logical recording identity"
+          },
+          "audio_url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uri",
+            "description": "Pre-signed URL when a storage key is assigned; URL presence does not prove that the object exists or upload completion was accepted"
+          },
+          "is_streaming": {
+            "type": "boolean"
+          },
+          "chunk_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "end_user_id",
+          "device_id",
+          "name",
+          "status",
+          "duration_seconds",
+          "file_size_bytes",
+          "recorded_at",
+          "metadata",
+          "upload_method",
+          "source",
+          "mime_type",
+          "content_sha256",
+          "content_sha256_verified_at",
+          "recording_uuid",
+          "recording_generation",
+          "is_streaming",
+          "chunk_count",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "RecordingDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Recording"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "audio_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "uri",
+                "description": "Pre-signed URL when a storage key is assigned; URL presence does not prove object existence or accepted upload completion"
+              }
+            },
+            "required": [
+              "audio_url"
+            ]
+          }
+        ]
+      },
+      "Transcription": {
+        "type": "object",
+        "properties": {
+          "marker_required": {
+            "type": "boolean",
+            "description": "True only for a job bound to a verified published marker set; not a completion or deletion proof"
+          },
+          "marker_context": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecordingMarkerAIContext"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "marker_annotations": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/RecordingMarkerAnnotation"
+            }
+          },
+          "transcript_version": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "Immutable server-issued version after marked transcription completion; null for ordinary legacy rows"
+          },
+          "id": {
+            "type": "string",
+            "example": "txn_abc123"
+          },
+          "recording_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "completed",
+              "failed"
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "language": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "segments": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/TranscriptionSegment"
+            }
+          },
+          "full_text": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "word_count": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "maxLength": 6,
+                "pattern": "^-?[0-9]\\.[0-9]{3}$"
+              },
+              {
+                "type": "string",
+                "enum": [
+                  "NaN"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Number or raw PostgreSQL DECIMAL(4,3) string with three fractional digits, including the PostgreSQL NaN sentinel. No probability-range constraint is imposed."
+          },
+          "error_message": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "recording_id",
+          "status",
+          "provider",
+          "language",
+          "segments",
+          "full_text",
+          "word_count",
+          "confidence",
+          "error_message",
+          "started_at",
+          "completed_at",
+          "created_at",
+          "updated_at"
+        ]
+      },
+      "RecordingMarkerAIContext": {
+        "type": "object",
+        "properties": {
+          "recording_id": {
+            "type": "string"
+          },
+          "recording_generation": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 4294967295
+          },
+          "marker_revision": {
+            "type": "string",
+            "pattern": "^[1-9][0-9]{0,18}$"
+          },
+          "snapshot_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "SHA-256 of raw canonical snapshot bytes, without a domain prefix"
+          },
+          "transcription_id": {
+            "type": "string"
+          },
+          "transcription_version": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$",
+            "description": "Summary context pins the completed transcription version"
+          }
+        },
+        "required": [
+          "recording_id",
+          "recording_generation",
+          "marker_revision",
+          "snapshot_sha256",
+          "transcription_id"
+        ]
+      },
+      "RecordingMarkerAnnotation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sequence": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 4294967295
+          },
+          "media_offset_ms": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,19})$"
+          },
+          "segment_index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "segment_offset_ms": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,19})$"
+          },
+          "transcript_segment_indices": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Zero-based matching ASR intervals; empty means no matching transcript text, not inferred speech"
+          }
+        },
+        "required": [
+          "id",
+          "sequence",
+          "media_offset_ms",
+          "segment_index",
+          "segment_offset_ms",
+          "transcript_segment_indices"
+        ]
+      },
+      "TranscriptionSegment": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "number"
+          },
+          "end": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "speaker": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "text"
+        ]
+      },
+      "Summary": {
+        "type": "object",
+        "properties": {
+          "marker_required": {
+            "type": "boolean",
+            "description": "True only for a job bound to a verified published marker set; not a completion or deletion proof"
+          },
+          "marker_context": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RecordingMarkerAIContext"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "marker_annotations": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "$ref": "#/components/schemas/RecordingMarkerAnnotation"
+            }
+          },
+          "id": {
+            "type": "string",
+            "example": "sum_abc123"
+          },
+          "project_id": {
+            "type": "string"
+          },
+          "transcription_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "completed",
+              "failed"
+            ]
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "template_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "custom_prompt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "output": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": {}
+          },
+          "error_message": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "started_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "completed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "project_id",
+          "transcription_id",
+          "status",
+          "provider",
+          "template_id",
+          "custom_prompt",
+          "output",
+          "error_message",
+          "started_at",
+          "completed_at",
+          "created_at",
+          "updated_at"
+        ]
+      }
+    },
+    "responses": {
+      "AuthenticatedReadOrganizationAccessQuarantined": {
+        "description": "Organization access is temporarily locked while an organization deletion request is active. The organization owner may cancel the request through the dashboard during the grace period.",
+        "headers": {
+          "X-Request-Id": {
+            "$ref": "#/components/headers/AuthenticatedReadXRequestId"
+          },
+          "RateLimit-Policy": {
+            "$ref": "#/components/headers/AuthenticatedReadRateLimitPolicy"
+          },
+          "RateLimit-Limit": {
+            "$ref": "#/components/headers/AuthenticatedReadRateLimitLimit"
+          },
+          "RateLimit-Remaining": {
+            "$ref": "#/components/headers/AuthenticatedReadRateLimitRemaining"
+          },
+          "RateLimit-Reset": {
+            "$ref": "#/components/headers/AuthenticatedReadRateLimitReset"
+          },
+          "X-RateLimit-Limit": {
+            "$ref": "#/components/headers/AuthenticatedReadXRateLimitLimit"
+          },
+          "X-RateLimit-Remaining": {
+            "$ref": "#/components/headers/AuthenticatedReadXRateLimitRemaining"
+          },
+          "X-RateLimit-Reset": {
+            "$ref": "#/components/headers/AuthenticatedReadXRateLimitReset"
+          },
+          "X-RateLimit-Tier": {
+            "$ref": "#/components/headers/AuthenticatedReadXRateLimitTier"
+          },
+          "Cache-Control": {
+            "description": "Quarantine responses must not be cached.",
+            "schema": {
+              "type": "string",
+              "const": "no-store"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "error"
+              ],
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "code",
+                    "message"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string",
+                      "const": "organization_access_quarantined"
+                    },
+                    "message": {
+                      "type": "string",
+                      "const": "Organization access is temporarily locked"
+                    },
+                    "request_id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "API key (sk_live_*, sk_test_*, rk_*), device token (dtok_*), or command-bound reset completion credential (rct_*; exact factory-reset ACK only)"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}

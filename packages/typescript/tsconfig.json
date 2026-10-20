@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "skipLibCheck": false,
+    "noEmit": true
+  },
+  "include": ["consumer.ts", "runtime.ts", "runtime-consumer.ts", "index.ts", "generated/client.ts", "client-consumer.ts", "generated/schema.d.ts"]
+}

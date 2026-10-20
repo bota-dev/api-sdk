@@ -1,0 +1,28 @@
+{
+  "name": "bota-api-sdk-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "type": "module",
+  "description": "Bota API SDK source and qualification workspace",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bota-dev/api-sdk.git"
+  },
+  "workspaces": ["packages/typescript"],
+  "packageManager": "npm@11.17.0",
+  "engines": { "node": ">=22.23.2", "npm": "11.17.0" },
+  "scripts": {
+    "lint": "eslint . --max-warnings=0",
+    "check": "node scripts/workspace-command.mjs check",
+    "test": "node --test scripts/check-licenses.test.mjs scripts/workspace-command.test.mjs && node scripts/workspace-command.mjs test",
+    "test:licenses": "node --test scripts/check-licenses.test.mjs",
+    "test:workspace": "node --test scripts/workspace-command.test.mjs",
+    "build": "node scripts/workspace-command.mjs build",
+    "license-check": "node scripts/check-licenses.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "eslint": "10.13.0"
+  }
+}

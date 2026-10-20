@@ -1,0 +1,156 @@
+[
+  {
+    "operationId": "getAuthIdentity",
+    "method": "GET",
+    "path": "/auth/identity",
+    "responses": [
+      "200",
+      "401",
+      "403",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getEndUsers",
+    "method": "GET",
+    "path": "/end-users",
+    "responses": [
+      "200",
+      "400",
+      "401",
+      "403",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getEndUsersById",
+    "method": "GET",
+    "path": "/end-users/{id}",
+    "responses": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getDevices",
+    "method": "GET",
+    "path": "/devices",
+    "responses": [
+      "200",
+      "400",
+      "401",
+      "403",
+      "404",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getDevicesById",
+    "method": "GET",
+    "path": "/devices/{id}",
+    "responses": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getRecordings",
+    "method": "GET",
+    "path": "/recordings",
+    "responses": [
+      "200",
+      "400",
+      "401",
+      "403",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getRecordingsById",
+    "method": "GET",
+    "path": "/recordings/{id}",
+    "responses": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getTranscriptions",
+    "method": "GET",
+    "path": "/transcriptions",
+    "responses": [
+      "200",
+      "400",
+      "401",
+      "403",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getTranscriptionsById",
+    "method": "GET",
+    "path": "/transcriptions/{id}",
+    "responses": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getSummaries",
+    "method": "GET",
+    "path": "/summaries",
+    "responses": [
+      "200",
+      "400",
+      "401",
+      "403",
+      "423",
+      "429",
+      "500"
+    ]
+  },
+  {
+    "operationId": "getSummariesById",
+    "method": "GET",
+    "path": "/summaries/{id}",
+    "responses": [
+      "200",
+      "401",
+      "403",
+      "404",
+      "423",
+      "429",
+      "500"
+    ]
+  }
+]

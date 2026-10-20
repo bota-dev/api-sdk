@@ -1,0 +1,32 @@
+{
+  "version": 1,
+  "status": "beta-language-neutral-synthetic-subset",
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "0eaaa8a516deb9c56054ecaf78ddf95803d016b7",
+    "path": "api-reference/openapi.json",
+    "sha256": "2cc659ca6cbe527373690cf140e6fb084fa6add50114371a5e8fb82203f52373"
+  },
+  "policyId": "private-eleven-read-policy-v1",
+  "fixtureCount": 94,
+  "operationCount": 11,
+  "supportedRunners": [
+    "typescript-node22",
+    "typescript-node24"
+  ],
+  "qualification": "Digests bind fixture inputs and implementation; they do not establish a test pass, Python parity, backend acceptance or publication.",
+  "files": {
+    "conformance/corpus.schema.json": "bd52147b27ac68ed6cbcb9374911240cbebf192eeb3a72ef6ed26b85c3d9de56",
+    "conformance/corpus.json": "f21f2511c968d540383d3ebb37795c15a35217d1e18af1497850f34093c7b16c",
+    "conformance/policy.json": "17f255b8d3e4bccad41607e7589b3f47e6be736e37070b1dfdcd94137b2ddc71",
+    "conformance/validate.mjs": "0f56f794e6eff4848d9794ed9377b1d4117d5a0ec06b39ec3e4550cf31313f5c",
+    "conformance/runner.test.mjs": "da25e801f3fb5865d5cc6d9f637c62130d9a426590b454a8ab7aaf372ecb882f",
+    "conformance/provenance.mjs": "280758e63ef07211802fa70d215e47e818f06a2c7852fa48c1dd082906f3c752",
+    "cohort.json": "d424571522d6875c2419ef4761103257e98040e0874170126a91f26db7b90433",
+    "input.json": "873e4b7db33fc026f5dd585d109375395512d031fdae12cb08748640fe4aca65",
+    "generated/operations.json": "bff2327ee040442dc1732095571ae2f9bec212c7f6d2ad4f4c95a60e38572620",
+    "generated/schema.d.ts": "e6abcec5768db89b950d31a260149be6cd9180824b0d636103e431bee3ff7e80",
+    "generated/provenance.json": "836b4aa4765477bb2d7a864ea4ca0e865d0ad424fef1f4adcb9f59f39fa5cfed",
+    "runtime.ts": "f9b0f1eb96ab69c67b21da5151c00a5a61cef7dc050c9f423f208883cbd02fee"
+  }
+}

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+.package-artifacts/
+*.tgz
+*.tsbuildinfo
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

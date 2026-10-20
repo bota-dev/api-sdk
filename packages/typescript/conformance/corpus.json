@@ -1,0 +1,4455 @@
+{
+  "version": 1,
+  "policyId": "private-eleven-read-policy-v1",
+  "cases": [
+    {
+      "id": "identity-seven-fields",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "project_id": "proj_fixture",
+            "organization_id": "org_fixture",
+            "key_id": "key_fixture",
+            "key_type": "restricted",
+            "is_test_mode": true,
+            "scope_mode": "restricted",
+            "scopes": [
+              "recordings:read"
+            ]
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "project_id": "proj_fixture",
+            "organization_id": "org_fixture",
+            "key_id": "key_fixture",
+            "key_type": "restricted",
+            "is_test_mode": true,
+            "scope_mode": "restricted",
+            "scopes": [
+              "recordings:read"
+            ]
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "end-user-list-scalar-encoding",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers",
+        "input": {
+          "query": {
+            "email": "",
+            "external_id": "Customer 一+&=/%",
+            "cursor": "opaque+/=&",
+            "limit": 2
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": false,
+            "next_cursor": null
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users?limit=2&cursor=opaque%2B%2F%3D%26&external_id=Customer+%E4%B8%80%2B%26%3D%2F%25&email=",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "data": [],
+            "has_more": false,
+            "next_cursor": null
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "end-user-get-opaque-id",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsersById",
+        "input": {
+          "path": {
+            "id": "user /+?#一"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "id": "user /+?#一",
+            "external_id": "external",
+            "email": null,
+            "legacy_extra": {
+              "retained": true
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users/user%20%2F%2B%3F%23%E4%B8%80",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "user /+?#一",
+            "external_id": "external",
+            "email": null,
+            "legacy_extra": {
+              "retained": true
+            }
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "device-list-preserves-shadowed-filter",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": {
+            "serial_number": "Pin+001",
+            "end_user_id": "user opaque",
+            "limit": 1
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/devices?limit=1&end_user_id=user+opaque&serial_number=Pin%2B001",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "data": [],
+            "has_more": false
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "device-get-opaque-id",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevicesById",
+        "input": {
+          "path": {
+            "id": "device/% +"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "id": "device/% +",
+            "name": null
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/devices/device%2F%25%20%2B",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "device/% +",
+            "name": null
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "recording-list-filter-offset-encoding",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getRecordings",
+        "input": {
+          "query": {
+            "end_date": "2026-10-21T00:00:00Z",
+            "start_date": "2026-10-20T08:00:00.123456+08:00",
+            "status": "integrity_failure",
+            "device_id": "device+two",
+            "end_user_id": "user/one",
+            "limit": 2
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": false,
+            "total": 0
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/recordings?limit=2&end_user_id=user%2Fone&device_id=device%2Btwo&status=integrity_failure&start_date=2026-10-20T08%3A00%3A00.123456%2B08%3A00&end_date=2026-10-21T00%3A00%3A00Z",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "data": [],
+            "has_more": false,
+            "total": 0
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "recording-detail-quoted-numerics-null-unknown",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getRecordingsById",
+        "input": {
+          "path": {
+            "id": "rec/opaque"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "id": "rec/opaque",
+            "file_size_bytes": "9223372036854775807",
+            "data_uploaded_bytes": "9007199254740993",
+            "audio_url": null,
+            "legacy_extra": {
+              "preserved": true
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/recordings/rec%2Fopaque",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "rec/opaque",
+            "file_size_bytes": "9223372036854775807",
+            "data_uploaded_bytes": "9007199254740993",
+            "audio_url": null,
+            "legacy_extra": {
+              "preserved": true
+            }
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "transcription-list-filter",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getTranscriptions",
+        "input": {
+          "query": {
+            "recording_id": "rec+/one",
+            "start_date": "2026-10-20T00:00:00.000001Z"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/transcriptions?recording_id=rec%2B%2Fone&start_date=2026-10-20T00%3A00%3A00.000001Z",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "data": [],
+            "has_more": false
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "transcription-detail-numeric-text",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getTranscriptionsById",
+        "input": {
+          "path": {
+            "id": "tr:opaque"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "id": "tr:opaque",
+            "confidence": "0.950",
+            "words": [
+              {
+                "confidence": "NaN",
+                "text": "fixture"
+              }
+            ],
+            "language": null
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/transcriptions/tr%3Aopaque",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "tr:opaque",
+            "confidence": "0.950",
+            "words": [
+              {
+                "confidence": "NaN",
+                "text": "fixture"
+              }
+            ],
+            "language": null
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "summary-list-filter",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getSummaries",
+        "input": {
+          "query": {
+            "transcription_id": "tr/one",
+            "end_date": "2026-10-21T00:00:00.000001-07:00"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/summaries?transcription_id=tr%2Fone&end_date=2026-10-21T00%3A00%3A00.000001-07%3A00",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "data": [],
+            "has_more": false
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "summary-detail-project-unknown",
+      "purpose": "Pinned operation path and raw JSON response are preserved.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getSummariesById",
+        "input": {
+          "path": {
+            "id": "sum one"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "id": "sum one",
+            "project_id": "proj_fixture",
+            "legacy_workflow_field": {
+              "unchanged": true
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/summaries/sum%20one",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "sum one",
+            "project_id": "proj_fixture",
+            "legacy_workflow_field": {
+              "unchanged": true
+            }
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "custom-versioned-root",
+      "purpose": "Custom HTTPS versioned root is explicit and no real network is used.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "baseUrl": "https://fixture.example.test/gateway/v1/",
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://fixture.example.test/gateway/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "empty-204",
+      "purpose": "Explicit empty response has no data property in the neutral result.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 204,
+          "headers": {
+            "content-type": "application/json",
+            "x-request-id": "req_empty"
+          },
+          "body": null
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 204,
+          "headers": {
+            "content-type": "application/json",
+            "x-request-id": "req_empty"
+          }
+        }
+      }
+    },
+    {
+      "id": "json-suffix-content-type",
+      "purpose": "Structured suffix JSON is parsed without rewriting the response.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/problem+json"
+          },
+          "body": {
+            "unchanged": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "unchanged": true
+          },
+          "headers": {
+            "content-type": "application/problem+json"
+          }
+        }
+      }
+    },
+    {
+      "id": "error-envelope-header-precedence",
+      "purpose": "Error body is exact; request ID convenience prefers body and headers remain separate.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getRecordingsById",
+        "input": {
+          "path": {
+            "id": "absent"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 404,
+          "headers": {
+            "content-type": "application/json",
+            "x-request-id": "header-request",
+            "ratelimit-limit": "100",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Fixture not found",
+              "param": "id",
+              "request_id": "body-request"
+            },
+            "extra": {
+              "legacy": true
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/recordings/absent",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "x-request-id": "header-request",
+            "ratelimit-limit": "100",
+            "retry-after": "0"
+          },
+          "status": 404,
+          "body": {
+            "error": {
+              "code": "NOT_FOUND",
+              "message": "Fixture not found",
+              "param": "id",
+              "request_id": "body-request"
+            },
+            "extra": {
+              "legacy": true
+            }
+          },
+          "code": "NOT_FOUND",
+          "param": "id",
+          "requestId": "body-request",
+          "apiMessage": "Fixture not found"
+        }
+      }
+    },
+    {
+      "id": "error-request-header-fallback",
+      "purpose": "Request ID fallback does not insert an ID into the body.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 403,
+          "headers": {
+            "content-type": "application/json",
+            "x-request-id": "header-only"
+          },
+          "body": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "Denied"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "x-request-id": "header-only"
+          },
+          "status": 403,
+          "body": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "Denied"
+            }
+          },
+          "code": "FORBIDDEN",
+          "requestId": "header-only",
+          "apiMessage": "Denied"
+        }
+      }
+    },
+    {
+      "id": "billing-429-is-terminal",
+      "purpose": "Billing 429 remains terminal despite usable retry advice.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 429,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "RATE_LIMIT_EXCEEDED",
+              "message": "Billing allowance exhausted",
+              "details": {
+                "remaining": 0
+              }
+            },
+            "limit": 100,
+            "reset_at": "2026-10-21T00:00:00Z"
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 429,
+          "body": {
+            "error": {
+              "code": "RATE_LIMIT_EXCEEDED",
+              "message": "Billing allowance exhausted",
+              "details": {
+                "remaining": 0
+              }
+            },
+            "limit": 100,
+            "reset_at": "2026-10-21T00:00:00Z"
+          },
+          "code": "RATE_LIMIT_EXCEEDED",
+          "apiMessage": "Billing allowance exhausted"
+        }
+      }
+    },
+    {
+      "id": "ordinary-400-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 400,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_400",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 400,
+          "body": {
+            "error": {
+              "code": "FIXTURE_400",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_400",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "ordinary-401-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 401,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_401",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 401,
+          "body": {
+            "error": {
+              "code": "FIXTURE_401",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_401",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "ordinary-403-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 403,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_403",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 403,
+          "body": {
+            "error": {
+              "code": "FIXTURE_403",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_403",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "ordinary-404-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 404,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_404",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 404,
+          "body": {
+            "error": {
+              "code": "FIXTURE_404",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_404",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "ordinary-409-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 409,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_409",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 409,
+          "body": {
+            "error": {
+              "code": "FIXTURE_409",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_409",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "ordinary-423-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 423,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_423",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 423,
+          "body": {
+            "error": {
+              "code": "FIXTURE_423",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_423",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "ordinary-500-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 500,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_500",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 500,
+          "body": {
+            "error": {
+              "code": "FIXTURE_500",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_500",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "ordinary-501-is-terminal",
+      "purpose": "Ordinary errors do not acquire retry authority from Retry-After.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 501,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "FIXTURE_501",
+              "message": "Terminal fixture"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "status": 501,
+          "body": {
+            "error": {
+              "code": "FIXTURE_501",
+              "message": "Terminal fixture"
+            }
+          },
+          "code": "FIXTURE_501",
+          "apiMessage": "Terminal fixture"
+        }
+      }
+    },
+    {
+      "id": "invalid-json-nan",
+      "purpose": "Invalid JSON lexical forms are refused and raw wire text is not retained.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyText": "NaN"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "invalid-json-infinity",
+      "purpose": "Invalid JSON lexical forms are refused and raw wire text is not retained.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyText": "Infinity"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "invalid-json-minus-infinity",
+      "purpose": "Invalid JSON lexical forms are refused and raw wire text is not retained.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyText": "-Infinity"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "invalid-json-leading-zero",
+      "purpose": "Invalid JSON lexical forms are refused and raw wire text is not retained.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyText": "{\"value\":01}"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "invalid-json-trailing-junk",
+      "purpose": "Invalid JSON lexical forms are refused and raw wire text is not retained.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyText": "{\"ok\":true}x"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "invalid-json-trailing-comma",
+      "purpose": "Invalid JSON lexical forms are refused and raw wire text is not retained.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyText": "[1,]"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "invalid-json-unquoted-key",
+      "purpose": "Invalid JSON lexical forms are refused and raw wire text is not retained.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyText": "{value:1}"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "invalid-utf8",
+      "purpose": "Invalid UTF-8 is refused before parsing.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyBytes": [
+            123,
+            34,
+            120,
+            34,
+            58,
+            34,
+            195,
+            40,
+            34,
+            125
+          ]
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "quoted-special-numerics",
+      "purpose": "Quoted special numerics remain ordinary strings.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "a": "NaN",
+            "b": "Infinity",
+            "c": "-Infinity",
+            "d": "9223372036854775807",
+            "e": "0.950"
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "result": {
+          "status": 200,
+          "data": {
+            "a": "NaN",
+            "b": "Infinity",
+            "c": "-Infinity",
+            "d": "9223372036854775807",
+            "e": "0.950"
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "oversized-body-is-terminal",
+      "purpose": "Successful oversized body cannot trigger replay.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxResponseBytes": 2,
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "fixture": "too big"
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "response_too_large",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "unsupported-success-status",
+      "purpose": "Undeclared successful status remains an invalid response.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 201,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "invalid_response",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 201
+        }
+      }
+    },
+    {
+      "id": "http-redirect",
+      "purpose": "Redirects never forward the credential to another target or retry.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 302,
+          "headers": {
+            "location": "https://elsewhere.example.test/v1/auth/identity",
+            "content-type": "text/plain;charset=UTF-8"
+          },
+          "bodyText": ""
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "redirect",
+          "headers": {
+            "location": "https://elsewhere.example.test/v1/auth/identity",
+            "content-type": "text/plain;charset=UTF-8"
+          },
+          "status": 302
+        }
+      }
+    },
+    {
+      "id": "auto-followed",
+      "purpose": "Redirects never forward the credential to another target or retry.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          },
+          "redirected": true
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "redirect",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "response-origin-mismatch",
+      "purpose": "Redirects never forward the credential to another target or retry.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          },
+          "url": "https://elsewhere.example.test/v1/auth/identity"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "redirect",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "response-path-mismatch",
+      "purpose": "Redirects never forward the credential to another target or retry.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          },
+          "url": "https://api.bota.dev/v1/devices"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "redirect",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "admission-unknown-operation",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "createRecording"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-missing-path",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getRecordingsById"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-dot-path",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getRecordingsById",
+        "input": {
+          "path": {
+            "id": ".."
+          }
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-null-input",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": null
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-array-query",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": []
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-unknown-query",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": {
+            "arbitrary": "ignored?"
+          }
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-invalid-limit-type",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": {
+            "limit": "2"
+          }
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-invalid-limit-range",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": {
+            "limit": 101
+          }
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-nul-filter",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": {
+            "end_user_id": "bad\u0000id"
+          }
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-empty-owner-filter",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": {
+            "end_user_id": ""
+          }
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-invalid-status",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getRecordings",
+        "input": {
+          "query": {
+            "status": "unknown"
+          }
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-null-options",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "options": null
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-unknown-options",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "options": {
+          "automaticLogin": true
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-retry-bound",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "options": {
+          "maxRetries": 3
+        }
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-nonversioned-root",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "baseUrl": "https://fixture.example.test"
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-root-userinfo",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "baseUrl": "https://user@fixture.example.test/v1"
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-insecure-root",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "baseUrl": "http://fixture.example.test/v1",
+          "allowLoopbackHttp": true
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "admission-root-query",
+      "purpose": "Invalid input is refused before credentials and transport.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "baseUrl": "https://fixture.example.test/v1?key=synthetic"
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "cancel-before-provider",
+      "purpose": "Pre-cancelled request never obtains credentials or fetches.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity",
+        "cancelAt": "pre_request"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "error": {
+          "kind": "aborted",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "cancel-during-fetch",
+      "purpose": "Transport cancellation is terminal and no second credential or fetch is admitted.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "cancel_fetch"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "aborted",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "cancel-during-body",
+      "purpose": "Body cancellation retains received HTTP context and never retries.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyFault": "cancel"
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "aborted",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 200
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getAuthIdentity",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getEndUsers",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getEndUsers"
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getEndUsersById",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getEndUsersById",
+        "input": {
+          "path": {
+            "id": "read"
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users/read",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/end-users/read",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getDevices",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getDevices"
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/devices",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/devices",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getDevicesById",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getDevicesById",
+        "input": {
+          "path": {
+            "id": "read"
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/devices/read",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/devices/read",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getRecordings",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getRecordings"
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/recordings",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/recordings",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getRecordingsById",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getRecordingsById",
+        "input": {
+          "path": {
+            "id": "read"
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/recordings/read",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/recordings/read",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getTranscriptions",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getTranscriptions"
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/transcriptions",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/transcriptions",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getTranscriptionsById",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getTranscriptionsById",
+        "input": {
+          "path": {
+            "id": "read"
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/transcriptions/read",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/transcriptions/read",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getSummaries",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getSummaries"
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/summaries",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/summaries",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-allowlist-getSummariesById",
+      "purpose": "Each explicitly admitted read may retry a gateway failure with a fresh caller credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getSummariesById",
+        "input": {
+          "path": {
+            "id": "read"
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_attempt_one",
+        "synthetic_attempt_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "TEMPORARY"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/summaries/read",
+            "credential": "synthetic_attempt_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/summaries/read",
+            "credential": "synthetic_attempt_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-transport",
+      "purpose": "Only eligible transient failure receives another attempt.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "credentials": [
+        "synthetic_retry_one",
+        "synthetic_retry_two"
+      ],
+      "script": [
+        {
+          "type": "transport",
+          "message": "synthetic_fixture_key must not leak"
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-body-interruption",
+      "purpose": "Only eligible transient failure receives another attempt.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "credentials": [
+        "synthetic_retry_one",
+        "synthetic_retry_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "bodyFault": "transport"
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-non-json-502",
+      "purpose": "Only eligible transient failure receives another attempt.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "credentials": [
+        "synthetic_retry_one",
+        "synthetic_retry_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 502,
+          "headers": {
+            "content-type": "text/html"
+          },
+          "bodyText": "fixture gateway"
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "retry-rate-429",
+      "purpose": "Only eligible transient failure receives another attempt.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "credentials": [
+        "synthetic_retry_one",
+        "synthetic_retry_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 429,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "0"
+          },
+          "body": {
+            "error": {
+              "code": "rate_limit_exceeded"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "ok": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_retry_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "result": {
+          "status": 200,
+          "data": {
+            "ok": true
+          },
+          "headers": {
+            "content-type": "application/json"
+          }
+        }
+      }
+    },
+    {
+      "id": "429-advice-absent",
+      "purpose": "Unusable or over-cap Retry-After never causes a 429 replay.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 429,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "error": {
+              "code": "rate_limit_exceeded"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 429,
+          "body": {
+            "error": {
+              "code": "rate_limit_exceeded"
+            }
+          },
+          "code": "rate_limit_exceeded"
+        }
+      }
+    },
+    {
+      "id": "429-advice-invalid",
+      "purpose": "Unusable or over-cap Retry-After never causes a 429 replay.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 429,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "1.5"
+          },
+          "body": {
+            "error": {
+              "code": "rate_limit_exceeded"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "1.5"
+          },
+          "status": 429,
+          "body": {
+            "error": {
+              "code": "rate_limit_exceeded"
+            }
+          },
+          "code": "rate_limit_exceeded"
+        }
+      }
+    },
+    {
+      "id": "429-advice-over-cap",
+      "purpose": "Unusable or over-cap Retry-After never causes a 429 replay.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 2
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 429,
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "11"
+          },
+          "body": {
+            "error": {
+              "code": "rate_limit_exceeded"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "retry-after": "11"
+          },
+          "status": 429,
+          "body": {
+            "error": {
+              "code": "rate_limit_exceeded"
+            }
+          },
+          "code": "rate_limit_exceeded"
+        }
+      }
+    },
+    {
+      "id": "retry-all-credentials-error-redaction",
+      "purpose": "Error metadata, nested body keys/values and headers redact every attempted credential.",
+      "invoke": {
+        "mode": "read",
+        "client": {
+          "maxRetries": 1
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "credentials": [
+        "synthetic_previous+/=",
+        "synthetic_current+/="
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 503,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "error": {
+              "code": "TEMP"
+            }
+          }
+        },
+        {
+          "type": "response",
+          "status": 403,
+          "headers": {
+            "content-type": "application/json",
+            "x-debug": "synthetic_previous+/= synthetic_current%2B%2F%3D"
+          },
+          "body": {
+            "error": {
+              "code": "DENIED",
+              "message": "synthetic_previous+/= synthetic_current%2B%2F%3D",
+              "param": "synthetic_current+/=",
+              "request_id": "synthetic_previous+/="
+            },
+            "synthetic_previous+/=": {
+              "synthetic_current%2B%2F%3D": "synthetic_previous+/="
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_previous+/="
+          },
+          {
+            "url": "https://api.bota.dev/v1/auth/identity",
+            "credential": "synthetic_current+/="
+          }
+        ],
+        "credentialCalls": 2,
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json",
+            "x-debug": "[REDACTED] [REDACTED]"
+          },
+          "status": 403,
+          "body": {
+            "error": {
+              "code": "DENIED",
+              "message": "[REDACTED] [REDACTED]",
+              "param": "[REDACTED]",
+              "request_id": "[REDACTED]"
+            },
+            "[REDACTED]": {
+              "[REDACTED]": "[REDACTED]"
+            }
+          },
+          "code": "DENIED",
+          "param": "[REDACTED]",
+          "requestId": "[REDACTED]",
+          "apiMessage": "[REDACTED] [REDACTED]"
+        },
+        "absentSecrets": [
+          "synthetic_previous+/=",
+          "synthetic_current+/="
+        ]
+      }
+    },
+    {
+      "id": "pages-getEndUsers",
+      "purpose": "Complete pages and duplicate IDs are preserved, with exact filter and opaque cursor continuation.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers",
+        "input": {
+          "query": {
+            "external_id": "external +",
+            "limit": 1
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_fixture_key",
+        "synthetic_fixture_key"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users?limit=1&external_id=external+%2B",
+            "credential": "synthetic_fixture_key"
+          },
+          {
+            "url": "https://api.bota.dev/v1/end-users?limit=1&cursor=opaque%2B%2F%3D&external_id=external+%2B",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 2,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          },
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "pages-getDevices",
+      "purpose": "Complete pages and duplicate IDs are preserved, with exact filter and opaque cursor continuation.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getDevices",
+        "input": {
+          "query": {
+            "end_user_id": "user +",
+            "limit": 1
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_fixture_key",
+        "synthetic_fixture_key"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/devices?limit=1&end_user_id=user+%2B",
+            "credential": "synthetic_fixture_key"
+          },
+          {
+            "url": "https://api.bota.dev/v1/devices?limit=1&cursor=opaque%2B%2F%3D&end_user_id=user+%2B",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 2,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          },
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "pages-getRecordings",
+      "purpose": "Complete pages and duplicate IDs are preserved, with exact filter and opaque cursor continuation.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getRecordings",
+        "input": {
+          "query": {
+            "status": "completed",
+            "limit": 1
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_fixture_key",
+        "synthetic_fixture_key"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/=",
+            "total": 2
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false,
+            "total": 2
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/recordings?limit=1&status=completed",
+            "credential": "synthetic_fixture_key"
+          },
+          {
+            "url": "https://api.bota.dev/v1/recordings?limit=1&cursor=opaque%2B%2F%3D&status=completed",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 2,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/=",
+            "total": 2
+          },
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false,
+            "total": 2
+          }
+        ]
+      }
+    },
+    {
+      "id": "pages-getTranscriptions",
+      "purpose": "Complete pages and duplicate IDs are preserved, with exact filter and opaque cursor continuation.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getTranscriptions",
+        "input": {
+          "query": {
+            "recording_id": "rec +",
+            "limit": 1
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_fixture_key",
+        "synthetic_fixture_key"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/transcriptions?limit=1&recording_id=rec+%2B",
+            "credential": "synthetic_fixture_key"
+          },
+          {
+            "url": "https://api.bota.dev/v1/transcriptions?limit=1&cursor=opaque%2B%2F%3D&recording_id=rec+%2B",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 2,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          },
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "pages-getSummaries",
+      "purpose": "Complete pages and duplicate IDs are preserved, with exact filter and opaque cursor continuation.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getSummaries",
+        "input": {
+          "query": {
+            "transcription_id": "tr +",
+            "limit": 1
+          }
+        }
+      },
+      "credentials": [
+        "synthetic_fixture_key",
+        "synthetic_fixture_key"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          }
+        },
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/summaries?limit=1&transcription_id=tr+%2B",
+            "credential": "synthetic_fixture_key"
+          },
+          {
+            "url": "https://api.bota.dev/v1/summaries?limit=1&cursor=opaque%2B%2F%3D&transcription_id=tr+%2B",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 2,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": "9007199254740993"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "opaque+/="
+          },
+          {
+            "data": [
+              {
+                "id": "same-id",
+                "raw": null
+              }
+            ],
+            "has_more": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "pages-early-return",
+      "purpose": "Returning after one yielded page does not prefetch the continuation.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers",
+        "stopAfterPages": 1
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "one"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "cursor-two"
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "one"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "cursor-two"
+          }
+        ]
+      }
+    },
+    {
+      "id": "pages-missing-cursor",
+      "purpose": "Malformed continuation is refused before yielding or fetching another page.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": true
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "pages": [],
+        "error": {
+          "kind": "pagination",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "pages-nonboolean-more",
+      "purpose": "Malformed continuation is refused before yielding or fetching another page.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": "true"
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "pages": [],
+        "error": {
+          "kind": "pagination",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "pages-nonarray-data",
+      "purpose": "Malformed continuation is refused before yielding or fetching another page.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers"
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": {},
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "pages": [],
+        "error": {
+          "kind": "pagination",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "pages-repeated-initial",
+      "purpose": "Malformed continuation is refused before yielding or fetching another page.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers",
+        "input": {
+          "query": {
+            "cursor": "initial"
+          }
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [],
+            "has_more": true,
+            "next_cursor": "initial"
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users?cursor=initial",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "pages": [],
+        "error": {
+          "kind": "pagination",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "pages-max-pages",
+      "purpose": "Configured page exhaustion is explicit after the admitted complete page.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers",
+        "options": {
+          "maxPages": 1
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "one"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "cursor-two"
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "one"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "cursor-two"
+          }
+        ],
+        "error": {
+          "kind": "pagination",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "pages-max-items",
+      "purpose": "Over-bound page is refused whole before it can be yielded.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers",
+        "options": {
+          "maxItems": 1
+        }
+      },
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "one"
+              },
+              {
+                "id": "two"
+              }
+            ],
+            "has_more": false
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_fixture_key"
+          }
+        ],
+        "credentialCalls": 1,
+        "pages": [],
+        "error": {
+          "kind": "pagination",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "pages-unsupported-operation",
+      "purpose": "Detail reads cannot become a pagination source.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getAuthIdentity"
+      },
+      "script": [],
+      "expect": {
+        "calls": [],
+        "credentialCalls": 0,
+        "pages": [],
+        "error": {
+          "kind": "invalid_input",
+          "headers": {}
+        }
+      }
+    },
+    {
+      "id": "pages-credential-history",
+      "purpose": "Credential error redaction history spans the complete page iterator.",
+      "invoke": {
+        "mode": "pages",
+        "client": {
+          "maxRetries": 0
+        },
+        "operationId": "getEndUsers"
+      },
+      "credentials": [
+        "synthetic_page_one",
+        "synthetic_page_two"
+      ],
+      "script": [
+        {
+          "type": "response",
+          "status": 200,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "data": [
+              {
+                "id": "one"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "cursor-two"
+          }
+        },
+        {
+          "type": "response",
+          "status": 403,
+          "headers": {
+            "content-type": "application/json"
+          },
+          "body": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "synthetic_page_one synthetic_page_two"
+            }
+          }
+        }
+      ],
+      "expect": {
+        "calls": [
+          {
+            "url": "https://api.bota.dev/v1/end-users",
+            "credential": "synthetic_page_one"
+          },
+          {
+            "url": "https://api.bota.dev/v1/end-users?cursor=cursor-two",
+            "credential": "synthetic_page_two"
+          }
+        ],
+        "credentialCalls": 2,
+        "pages": [
+          {
+            "data": [
+              {
+                "id": "one"
+              }
+            ],
+            "has_more": true,
+            "next_cursor": "cursor-two"
+          }
+        ],
+        "error": {
+          "kind": "http",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "status": 403,
+          "body": {
+            "error": {
+              "code": "FORBIDDEN",
+              "message": "[REDACTED] [REDACTED]"
+            }
+          },
+          "code": "FORBIDDEN",
+          "apiMessage": "[REDACTED] [REDACTED]"
+        },
+        "absentSecrets": [
+          "synthetic_page_one",
+          "synthetic_page_two"
+        ]
+      }
+    }
+  ]
+}

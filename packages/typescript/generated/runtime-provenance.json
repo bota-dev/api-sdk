@@ -1,0 +1,61 @@
+{
+  "version": 1,
+  "status": "beta-read-sdk-experimental",
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "0eaaa8a516deb9c56054ecaf78ddf95803d016b7",
+    "path": "api-reference/openapi.json",
+    "sha256": "2cc659ca6cbe527373690cf140e6fb084fa6add50114371a5e8fb82203f52373"
+  },
+  "operationCount": 11,
+  "typescript": "5.9.3",
+  "supportedNode": [
+    "22.23.2",
+    "24.19.0"
+  ],
+  "files": {
+    "runtime.ts": "f9b0f1eb96ab69c67b21da5151c00a5a61cef7dc050c9f423f208883cbd02fee",
+    "runtime.test.mjs": "0be13fbbf5f15998bff788bd4ba8d97acde033ebe8bbf832da5be3f4b3a14c26",
+    "retry.test.mjs": "51255cbb88a46e3f4420b2f151b4b1fdb2702228324bfe455520545bb402a347",
+    "runtime-consumer.ts": "d211726d884e34d55af5ca6df179d4662a88a6991e7d57f7d5bdf1277b981cfe",
+    "runtime-provenance.mjs": "cfc9c0fcc867be737147dca4e7dabc1959423ac7e8b4297bac6c0da42ad0bdf0",
+    "index.ts": "f18ab574c027de14a1de748c8179beeefa6eee8d9c67f6543f5c7179da9e18d8",
+    "generated/client.ts": "ca672733d089aeca95a4c6f9a4925bf08a5e5ef1793b805322c7f1385fb34ea1",
+    "generated/client-methods.json": "8baecde6e89fcfd2531a7b0fab1c8b491b15a91fde1b0c9476e703095530a3f8",
+    "generated/client-provenance.json": "3eb865689c9e499ee4a03448bdb5b21c31cbfdbf80158a1b7119a862df50daca",
+    "generate-client.mjs": "9e0d4a48022333596e46e6c0265b8e68a8bad99fe289d5579ef969676ec62052",
+    "client-generation.mjs": "e3d473d507950fddcea6f872a51d2e5a3a75246099cdaa3ce01c4b63d2e61ed9",
+    "client.test.mjs": "ebc5616b1535bb8a7d79f5870a2c2b3d882b3714ebffdbd6f8a0743405068baf",
+    "client-consumer.ts": "f8c3a571198b36074fa0271357c8f0e12513f205c3afaeb35be076bb94f3e244",
+    "conformance/corpus.schema.json": "bd52147b27ac68ed6cbcb9374911240cbebf192eeb3a72ef6ed26b85c3d9de56",
+    "conformance/corpus.json": "f21f2511c968d540383d3ebb37795c15a35217d1e18af1497850f34093c7b16c",
+    "conformance/policy.json": "17f255b8d3e4bccad41607e7589b3f47e6be736e37070b1dfdcd94137b2ddc71",
+    "conformance/validate.mjs": "0f56f794e6eff4848d9794ed9377b1d4117d5a0ec06b39ec3e4550cf31313f5c",
+    "conformance/runner.test.mjs": "da25e801f3fb5865d5cc6d9f637c62130d9a426590b454a8ab7aaf372ecb882f",
+    "conformance/provenance.mjs": "280758e63ef07211802fa70d215e47e818f06a2c7852fa48c1dd082906f3c752",
+    "conformance/provenance.json": "fcdb817f21197bc278df6bcb4c9c358f4facd041d610e73756573afdd78e1373",
+    "tsconfig.json": "c252cb2142de4ee796d250788762cee39cead68615e48575644d44f08508a44a",
+    "package.json": "2170ca2c4c92bd57d8ada9cb9542b9bf384c85d66c1941ca81ac3bda767d909e",
+    "workspace.mjs": "821df1e48c216435047cbf598995992a4d681f30c625e32cc8b7859dfc086eea",
+    "workspace.test.mjs": "3f47fb0ee0ff2687bda0f69128f2a6ecede96aba5d8ef5ed9ca3a29e29a8068d",
+    "lineage.json": "48ab655ced7ec3fe167f1b225224e022ca916063dbbaeadcf23ad538cfb4180c",
+    "migration-provenance.mjs": "a6c2076f5c4b83964257096ce3ad8285e056fd86cf113909ec02aae2564977e7",
+    "generated/migration-provenance.json": "f11db4382749c2e8872c988d5e074163db4c2d248aa681131019336b2ab724fe",
+    "LICENSE": "e2b6b4713e4848d115ea00965c34849a9f3eabde11e1ca9c027ad6cde3aff4a4",
+    "cohort.json": "d424571522d6875c2419ef4761103257e98040e0874170126a91f26db7b90433",
+    "input.json": "873e4b7db33fc026f5dd585d109375395512d031fdae12cb08748640fe4aca65",
+    "generated/schema.d.ts": "e6abcec5768db89b950d31a260149be6cd9180824b0d636103e431bee3ff7e80",
+    "generated/operations.json": "bff2327ee040442dc1732095571ae2f9bec212c7f6d2ad4f4c95a60e38572620",
+    "generated/provenance.json": "836b4aa4765477bb2d7a864ea4ca0e865d0ad424fef1f4adcb9f59f39fa5cfed"
+  },
+  "workspaceFiles": {
+    "package.json": "a6c7ee768986d01aafed98021782f0215ba550064bcf26c3f6c7cfdac4b3a8b6",
+    "package-lock.json": "f8e8f41b9d9805524b966da135dc83fe8c48708c51e772d3d16197c64c711ad3",
+    "LICENSE": "e2b6b4713e4848d115ea00965c34849a9f3eabde11e1ca9c027ad6cde3aff4a4",
+    "scripts/check-licenses.mjs": "95220c3cb4579564c4a5440a571a44bcb288f77a5f015f1d7e3cac125dcd974c",
+    "scripts/check-licenses.test.mjs": "c92d5a056c15f6a8a352dc1a8e9ce02cea3d2c398a9180a81be0dd6534ba5022",
+    "scripts/workspace-command.mjs": "5d9b400a099f124920d366a25f226279b705c5730e8be4f30e724bd9b2943f80",
+    "scripts/workspace-command.test.mjs": "32432a9c8d878bf926d65aeec5ed81c028e18463fe66234ba3cf5e173232d8cb",
+    "eslint.config.js": "5644bec315732bddb32b22cbd45fccb14a3258de5b7274ac09f1afd70bdde316"
+  }
+}

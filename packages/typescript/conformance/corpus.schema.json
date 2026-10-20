@@ -1,0 +1,332 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bota:private-read-conformance:corpus:v1",
+  "title": "Private eleven-read synthetic conformance corpus",
+  "description": "Transport scripts and normalized outcomes for a declared subset; not a backend response schema or a complete SDK acceptance specification.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "policyId",
+    "cases"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "policyId": {
+      "const": "private-eleven-read-policy-v1"
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 11,
+      "maxItems": 200,
+      "items": {
+        "$ref": "#/$defs/fixture"
+      }
+    }
+  },
+  "$defs": {
+    "stringMap": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "status"
+      ],
+      "properties": {
+        "type": {
+          "const": "response"
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 599
+        },
+        "headers": {
+          "$ref": "#/$defs/stringMap"
+        },
+        "body": {},
+        "bodyText": {
+          "type": "string"
+        },
+        "bodyBytes": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          }
+        },
+        "bodyFault": {
+          "enum": [
+            "transport",
+            "cancel"
+          ]
+        },
+        "url": {
+          "type": "string"
+        },
+        "redirected": {
+          "type": "boolean"
+        }
+      }
+    },
+    "transport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "transport"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "cancelFetch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "const": "cancel_fetch"
+        }
+      }
+    },
+    "call": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "credential"
+      ],
+      "properties": {
+        "url": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Readable target example. Compare origin, exact encoded pathname and decoded query-pair multiset; query order and equivalent escaping are not cross-language requirements. Preserve duplicate pairs and reject userinfo/fragments."
+        },
+        "credential": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "headers"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "invalid_input",
+            "credentials",
+            "aborted",
+            "deadline",
+            "transport",
+            "redirect",
+            "invalid_response",
+            "response_too_large",
+            "http",
+            "pagination"
+          ]
+        },
+        "status": {
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 599
+        },
+        "headers": {
+          "$ref": "#/$defs/stringMap"
+        },
+        "body": {},
+        "code": {
+          "type": "string"
+        },
+        "param": {
+          "type": "string"
+        },
+        "requestId": {
+          "type": "string"
+        },
+        "apiMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "headers"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            200,
+            204
+          ]
+        },
+        "data": {},
+        "headers": {
+          "$ref": "#/$defs/stringMap"
+        }
+      }
+    },
+    "invoke": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "operationId"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "read",
+            "pages"
+          ]
+        },
+        "operationId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "input": {},
+        "options": {},
+        "client": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "baseUrl": {
+              "type": "string"
+            },
+            "allowLoopbackHttp": {
+              "type": "boolean"
+            },
+            "maxRetries": {
+              "type": "integer"
+            },
+            "maxResponseBytes": {
+              "type": "integer"
+            }
+          }
+        },
+        "cancelAt": {
+          "const": "pre_request"
+        },
+        "stopAfterPages": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "expected": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calls",
+        "credentialCalls"
+      ],
+      "properties": {
+        "calls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/call"
+          }
+        },
+        "credentialCalls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "result": {
+          "$ref": "#/$defs/result"
+        },
+        "pages": {
+          "type": "array",
+          "items": {}
+        },
+        "error": {
+          "$ref": "#/$defs/error"
+        },
+        "absentSecrets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "purpose",
+        "invoke",
+        "script",
+        "expect"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invoke": {
+          "$ref": "#/$defs/invoke"
+        },
+        "credentials": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "script": {
+          "type": "array",
+          "maxItems": 10,
+          "items": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/response"
+              },
+              {
+                "$ref": "#/$defs/transport"
+              },
+              {
+                "$ref": "#/$defs/cancelFetch"
+              }
+            ]
+          }
+        },
+        "expect": {
+          "$ref": "#/$defs/expected"
+        }
+      }
+    }
+  }
+}
