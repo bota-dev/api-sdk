@@ -33,7 +33,7 @@
   },
   "devDependencies": {
     "openapi-typescript": "7.13.0",
-    "typescript": "5.9.3"
+    "typescript": "7.0.2"
   },
   "description": "Experimental Bota API SDK: eleven reads and ordinary end-user creation/update for Node.js",
   "repository": {
