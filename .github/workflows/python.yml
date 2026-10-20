@@ -45,7 +45,7 @@ jobs:
           "$PYTHON_EXE" -I -B packages/python/tools/ci.py \
             --expected-python 3.12.15 --output-dir "$RUNNER_TEMP/python-sdk-qualification" --fetch
       - name: Preserve the one canonical candidate
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: python-sdk-canonical-${{ github.sha }}
           path: ${{ runner.temp }}/python-sdk-qualification/artifacts/*
@@ -97,7 +97,7 @@ jobs:
             --candidate-dir "$RUNNER_TEMP/canonical-python-sdk" \
             --candidate-receipt "$RUNNER_TEMP/canonical-python-sdk/qualification-receipt.json"
       - name: Preserve exact-runtime qualification evidence
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: python-sdk-${{ matrix.os }}-${{ matrix.python }}-${{ github.sha }}
           path: ${{ runner.temp }}/python-sdk-qualification/artifacts/*
