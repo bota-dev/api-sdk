@@ -1,0 +1,14 @@
+[
+  {
+    "name": "post_end_users",
+    "operation_id": "postEndUsers",
+    "input": "PostEndUsersInput",
+    "response": "PostEndUsersResponse"
+  },
+  {
+    "name": "patch_end_users_by_id",
+    "operation_id": "patchEndUsersById",
+    "input": "PatchEndUsersByIdInput",
+    "response": "PatchEndUsersByIdResponse"
+  }
+]

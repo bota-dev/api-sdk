@@ -2,6 +2,9 @@ import source from './input.json' with { type: 'json' };
 import index from './generated/operations.json' with { type: 'json' };
 import cohort from './cohort.json' with { type: 'json' };
 import type { operations } from './generated/schema.d.ts';
+import { types as nodeTypes } from 'node:util';
+import { mutationOperation } from './mutation-contract.ts';
+import type { MutationOperation, MutationInput, MutationResult, MutationRequestOptions } from './mutation-contract.ts';
 
 /** Private Node-only prototype. Generated types are assertions, not response validation. */
 export type ReadOperation = keyof operations;
@@ -66,6 +69,21 @@ export class ReadPrototypeError extends Error {
     Object.defineProperty(this, 'apiMessage', {
       value: typeof error?.message === 'string' ? error.message : undefined, enumerable: false,
     });
+  }
+}
+/** A submitted mutation may have taken effect even when its response is unavailable. */
+export class BotaMutationError extends ReadPrototypeError {
+  readonly requestOutcome: 'not_submitted' | 'unknown';
+  constructor(kind: FailureKind, details: {
+    requestOutcome: 'not_submitted' | 'unknown';
+    status?: number; headers?: Readonly<Record<string, string>>; body?: unknown;
+  }) {
+    super(kind, details);
+    this.name = 'BotaMutationError';
+    if (kind === 'invalid_input') this.message = 'Invalid API mutation input.';
+    if (kind === 'aborted') this.message = 'The mutation was cancelled.';
+    if (kind === 'deadline') this.message = 'The mutation deadline expired.';
+    this.requestOutcome = details.requestOutcome;
   }
 }
 function fail(kind: FailureKind): never { throw new ReadPrototypeError(kind); }
@@ -292,6 +310,114 @@ function requestUrl(root: URL, operation: string, input: unknown): URL {
   return url;
 }
 
+// These are transport bounds for an explicitly interoperable JSON subset,
+// not a second implementation of the backend's field/business validation.
+const MAX_MUTATION_BODY_BYTES = 1024 * 1024;
+const MAX_MUTATION_BODY_NODES = 100000;
+const MAX_MUTATION_BODY_DEPTH = 64;
+function mutationProperties(value: unknown, signal?: AbortSignal): Record<string, unknown> {
+  if (!record(value) || nodeTypes.isProxy(value) ||
+    Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) fail('invalid_input');
+  const properties: Record<string, unknown> = Object.create(null) as Record<string, unknown>;
+  const names = Reflect.ownKeys(value);
+  if (names.length > MAX_MUTATION_BODY_NODES) fail('invalid_input');
+  for (const name of names) {
+    if (signal) aborted(signal);
+    const descriptor = Object.getOwnPropertyDescriptor(value, name)!;
+    if (typeof name !== 'string' || !descriptor.enumerable || !('value' in descriptor)) fail('invalid_input');
+    properties[name] = descriptor.value as unknown;
+  }
+  return properties;
+}
+function mutationBody(value: unknown, signal: AbortSignal): string {
+  // A JSON object is required even when every operation field is optional.
+  if (!record(value) || nodeTypes.isProxy(value) ||
+    Object.getPrototypeOf(value) !== Object.prototype && Object.getPrototypeOf(value) !== null) fail('invalid_input');
+  const chunks: string[] = [];
+  const ancestors = new Set<object>();
+  const encoder = new TextEncoder();
+  let bytes = 0;
+  let nodes = 0;
+  const append = (text: string) => {
+    bytes += encoder.encode(text).byteLength;
+    if (bytes > MAX_MUTATION_BODY_BYTES) fail('invalid_input');
+    chunks.push(text);
+  };
+  const quoted = (text: string) => {
+    if (text.length > MAX_MUTATION_BODY_BYTES) fail('invalid_input');
+    for (let i = 0; i < text.length; i++) {
+      if (i % 4096 === 0) aborted(signal);
+      const unit = text.charCodeAt(i);
+      if (unit >= 0xd800 && unit <= 0xdbff) {
+        const next = text.charCodeAt(++i);
+        if (!(next >= 0xdc00 && next <= 0xdfff)) fail('invalid_input');
+      } else if (unit >= 0xdc00 && unit <= 0xdfff) fail('invalid_input');
+    }
+    append(JSON.stringify(text));
+  };
+  const visit = (item: unknown, depth: number): void => {
+    aborted(signal);
+    if (++nodes > MAX_MUTATION_BODY_NODES || depth > MAX_MUTATION_BODY_DEPTH) fail('invalid_input');
+    if (item === null) { append('null'); return; }
+    if (typeof item === 'boolean') { append(item ? 'true' : 'false'); return; }
+    if (typeof item === 'string') { quoted(item); return; }
+    if (typeof item === 'number') {
+      if (!Number.isFinite(item) || Number.isInteger(item) && !Number.isSafeInteger(item)) fail('invalid_input');
+      append(JSON.stringify(item)); return;
+    }
+    if (typeof item !== 'object' || nodeTypes.isProxy(item) || ancestors.has(item)) fail('invalid_input');
+    ancestors.add(item);
+    if (Array.isArray(item)) {
+      if (Object.getPrototypeOf(item) !== Array.prototype || item.length > MAX_MUTATION_BODY_NODES) fail('invalid_input');
+      const names = Reflect.ownKeys(item);
+      if (names.length !== item.length + 1 || names.some(name => typeof name !== 'string' ||
+        name !== 'length' && !/^(?:0|[1-9][0-9]*)$/.test(name))) fail('invalid_input');
+      append('[');
+      for (let i = 0; i < item.length; i++) {
+        const descriptor = Object.getOwnPropertyDescriptor(item, String(i));
+        if (!descriptor?.enumerable || !('value' in descriptor)) fail('invalid_input');
+        if (i) append(',');
+        visit(descriptor.value as unknown, depth + 1);
+      }
+      append(']');
+    } else {
+      const properties = mutationProperties(item, signal);
+      append('{');
+      let first = true;
+      for (const name of Object.keys(properties)) {
+        if (!first) append(',');
+        first = false;
+        quoted(name); append(':'); visit(properties[name], depth + 1);
+      }
+      append('}');
+    }
+    ancestors.delete(item);
+  };
+  visit(value, 0);
+  aborted(signal);
+  return chunks.join('');
+}
+function mutationTarget(root: URL, operation: MutationOperation, input: unknown) {
+  const definition = mutationOperation(operation);
+  if (!definition) fail('invalid_input');
+  const parameters = mutationProperties(input);
+  if (!Object.hasOwn(parameters, 'body') || Object.keys(parameters).some(name => name !== 'path' && name !== 'body')) fail('invalid_input');
+  const path = parameters.path === undefined ? {} : mutationProperties(parameters.path);
+  const hasId = definition.path.includes('{id}');
+  if (Object.keys(path).some(name => !hasId || name !== 'id')) fail('invalid_input');
+  let route: string = definition.path;
+  if (hasId) {
+    const id = path.id;
+    if (typeof id !== 'string' || !scalarMatches({ type: 'string', minLength: 1 }, id) || id === '.' || id === '..') fail('invalid_input');
+    try { route = route.replace('{id}', encodeURIComponent(id)); } catch { fail('invalid_input'); }
+  }
+  const url = new URL(`${root.href}${route}`);
+  if (url.origin !== root.origin || !url.pathname.startsWith(`${root.pathname}/`)) fail('invalid_input');
+  return { definition, url, body: parameters.body };
+}
+type WireResult = { status: 200 | 201 | 204; data: unknown; headers: Readonly<Record<string, string>> };
+type MutationAttempt = { method: 'POST' | 'PATCH'; body: string; successStatus: 200 | 201; submit(): void };
+
 export function createReadPrototype(options: PrototypeOptions) {
   if (!options || typeof options !== 'object' ||
     typeof options.credentials !== 'string' && typeof options.credentials !== 'function') fail('invalid_input');
@@ -303,8 +429,8 @@ export function createReadPrototype(options: PrototypeOptions) {
   const maximum = boundedInteger(options.maxResponseBytes, 8 * 1024 * 1024, 64 * 1024 * 1024);
   const retries = retryCount(options.maxRetries, 2);
 
-  async function attempt<O extends ReadOperation>(url: URL, signal: AbortSignal,
-    secrets: Set<string>, advice: { retryAfter: string | null }): Promise<ReadResult<O>> {
+  async function attempt(url: URL, signal: AbortSignal,
+    secrets: Set<string>, advice: { retryAfter: string | null }, mutation?: MutationAttempt): Promise<WireResult> {
     let key: string | undefined;
     let response: Response | undefined;
     let headers: Readonly<Record<string, string>> | undefined;
@@ -315,10 +441,14 @@ export function createReadPrototype(options: PrototypeOptions) {
       secrets.add(key);
       try {
         response = await within(async () => {
-          const received = await transport(url, {
-            method: 'GET', headers: { Accept: 'application/json', Authorization: `Bearer ${key}` },
+          const init: RequestInit = {
+            method: mutation?.method ?? 'GET', headers: { Accept: 'application/json', Authorization: `Bearer ${key}`,
+              ...(mutation ? { 'Content-Type': 'application/json' } : {}) },
             redirect: 'manual', credentials: 'omit', cache: 'no-store', signal,
-          });
+            ...(mutation ? { body: mutation.body } : {}),
+          };
+          mutation?.submit();
+          const received = await transport(url, init);
           if (signal.aborted) {
             dispose(received);
             aborted(signal);
@@ -342,7 +472,7 @@ export function createReadPrototype(options: PrototypeOptions) {
         catch { throw new ReadPrototypeError('invalid_response', { status: response.status, headers }); }
         if (actual.href !== url.href) throw new ReadPrototypeError('redirect', { status: response.status, headers });
       }
-      if (response.status === 204) return { status: 204, data: undefined, headers };
+      if (!mutation && response.status === 204) return { status: 204, data: undefined, headers };
       let body: unknown;
       try {
         const contentType = response.headers.get('content-type')?.split(';', 1)[0]?.trim().toLowerCase();
@@ -357,8 +487,9 @@ export function createReadPrototype(options: PrototypeOptions) {
         throw error;
       }
       if (!response.ok) throw new ReadPrototypeError('http', { status: response.status, headers, body: scrubBody(body, secrets) });
-      if (response.status !== 200) throw new ReadPrototypeError('invalid_response', { status: response.status, headers });
-      return { status: 200, data: body as ReadData<O>, headers };
+      const successStatus = mutation?.successStatus ?? 200;
+      if (response.status !== successStatus) throw new ReadPrototypeError('invalid_response', { status: response.status, headers });
+      return { status: successStatus, data: body, headers };
     } catch (error) {
       if (error instanceof ReadPrototypeError) throw error;
       aborted(signal);
@@ -383,7 +514,7 @@ export function createReadPrototype(options: PrototypeOptions) {
       for (let index = 0; ; index++) {
         aborted(active.signal);
         const advice = { retryAfter: null as string | null };
-        try { return await attempt<O>(new URL(url.href), active.signal, secrets, advice); }
+        try { return await attempt(new URL(url.href), active.signal, secrets, advice) as ReadResult<O>; }
         catch (error) {
           if (!(error instanceof ReadPrototypeError)) throw error;
           // Body reads already attach the received status/headers to their
@@ -414,6 +545,34 @@ export function createReadPrototype(options: PrototypeOptions) {
     const secrets = new Set<string>();
     try { return await request<O>(operation, input, requestOptions, secrets); }
     finally { secrets.clear(); }
+  }
+
+  async function mutate<O extends MutationOperation>(operation: O, input: MutationInput<O>,
+    requestOptions: MutationRequestOptions = {}): Promise<MutationResult<O>> {
+    let submitted = false;
+    let active: ReturnType<typeof scope> | undefined;
+    const secrets = new Set<string>();
+    try {
+      const checked = mutationProperties(requestOptions);
+      if (checked.signal !== undefined && nodeTypes.isProxy(checked.signal)) fail('invalid_input');
+      checkedOptions(checked);
+      if (checked.maxRetries !== undefined && checked.maxRetries !== 0) fail('invalid_input');
+      active = scope((checked as RequestOptions).signal, boundedInteger(checked.timeoutMs, timeout, 120000));
+      aborted(active.signal);
+      const target = mutationTarget(root, operation, input);
+      const body = mutationBody(target.body, active.signal);
+      const result = await attempt(target.url, active.signal, secrets, { retryAfter: null }, {
+        ...target.definition, body, submit() { submitted = true; },
+      });
+      return result as MutationResult<O>;
+    } catch (error) {
+      const outcome = submitted ? 'unknown' : 'not_submitted';
+      if (error instanceof ReadPrototypeError) throw new BotaMutationError(error.kind, {
+        requestOutcome: outcome, ...(error.status !== undefined ? { status: error.status } : {}),
+        headers: error.headers, body: error.body,
+      });
+      throw new BotaMutationError(submitted ? 'transport' : 'invalid_input', { requestOutcome: outcome });
+    } finally { active?.close(); secrets.clear(); }
   }
 
   async function* pages<O extends PageOperation>(operation: O, input?: ReadInput<O>, pageOptions: PageOptions = {}): AsyncGenerator<ReadData<O>, void, unknown> {
@@ -452,5 +611,5 @@ export function createReadPrototype(options: PrototypeOptions) {
       }
     } finally { active.close(); active.signal.removeEventListener('abort', forget); secrets.clear(); }
   }
-  return Object.freeze({ read, pages });
+  return Object.freeze({ read, pages, mutate });
 }

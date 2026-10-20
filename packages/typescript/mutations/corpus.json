@@ -1,0 +1,918 @@
+{
+  "version": 1,
+  "policy": "ordinary-end-user-writes-v1",
+  "cases": [
+    {
+      "id": "post-empty",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "id": "eu_fixture",
+          "nullable": null,
+          "unknown": {
+            "retained": true
+          },
+          "generation": "9007199254740993"
+        }
+      },
+      "expected": {
+        "result": {
+          "status": 201,
+          "data": {
+            "id": "eu_fixture",
+            "nullable": null,
+            "unknown": {
+              "retained": true
+            },
+            "generation": "9007199254740993"
+          }
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "post-correlation",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {
+          "external_id": "customer/001",
+          "name": "你好",
+          "metadata": {
+            "null": null,
+            "list": [
+              true,
+              1,
+              2.5,
+              "é"
+            ]
+          }
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "id": "eu_fixture",
+          "nullable": null,
+          "unknown": {
+            "retained": true
+          },
+          "generation": "9007199254740993"
+        }
+      },
+      "expected": {
+        "result": {
+          "status": 201,
+          "data": {
+            "id": "eu_fixture",
+            "nullable": null,
+            "unknown": {
+              "retained": true
+            },
+            "generation": "9007199254740993"
+          }
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "post-unknown-fields-transmitted",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {
+          "toJSON": "ordinary JSON data",
+          "unknown": {
+            "x": null
+          },
+          "email": "server-validates-this"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {
+          "id": "eu_fixture",
+          "nullable": null,
+          "unknown": {
+            "retained": true
+          },
+          "generation": "9007199254740993"
+        }
+      },
+      "expected": {
+        "result": {
+          "status": 201,
+          "data": {
+            "id": "eu_fixture",
+            "nullable": null,
+            "unknown": {
+              "retained": true
+            },
+            "generation": "9007199254740993"
+          }
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "patch-empty",
+      "operation": "patchEndUsersById",
+      "input": {
+        "path": {
+          "id": "eu_opaque"
+        },
+        "body": {}
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "eu_fixture",
+          "nullable": null,
+          "unknown": {
+            "retained": true
+          },
+          "generation": "9007199254740993"
+        }
+      },
+      "expected": {
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "eu_fixture",
+            "nullable": null,
+            "unknown": {
+              "retained": true
+            },
+            "generation": "9007199254740993"
+          }
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "patch-replace-metadata",
+      "operation": "patchEndUsersById",
+      "input": {
+        "path": {
+          "id": "eu_opaque"
+        },
+        "body": {
+          "metadata": {
+            "new": true
+          }
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "eu_fixture",
+          "nullable": null,
+          "unknown": {
+            "retained": true
+          },
+          "generation": "9007199254740993"
+        }
+      },
+      "expected": {
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "eu_fixture",
+            "nullable": null,
+            "unknown": {
+              "retained": true
+            },
+            "generation": "9007199254740993"
+          }
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "patch-unknown-external-id-transmitted",
+      "operation": "patchEndUsersById",
+      "input": {
+        "path": {
+          "id": "客户/?#+"
+        },
+        "body": {
+          "external_id": "backend-strips",
+          "unknown": []
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "eu_fixture",
+          "nullable": null,
+          "unknown": {
+            "retained": true
+          },
+          "generation": "9007199254740993"
+        }
+      },
+      "expected": {
+        "result": {
+          "status": 200,
+          "data": {
+            "id": "eu_fixture",
+            "nullable": null,
+            "unknown": {
+              "retained": true
+            },
+            "generation": "9007199254740993"
+          }
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "missing-body",
+      "operation": "postEndUsers",
+      "input": {},
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "null-body",
+      "operation": "postEndUsers",
+      "input": {
+        "body": null
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "array-body",
+      "operation": "postEndUsers",
+      "input": {
+        "body": []
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "string-body",
+      "operation": "postEndUsers",
+      "input": {
+        "body": "{}"
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "missing-path",
+      "operation": "patchEndUsersById",
+      "input": {
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "empty-id",
+      "operation": "patchEndUsersById",
+      "input": {
+        "body": {},
+        "path": {
+          "id": ""
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "unknown-operation",
+      "operation": "postDevices",
+      "input": {
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "http-400-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 400,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 400
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-401-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 401
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-403-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 403,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 403
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-404-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 404,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 404
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-409-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 409,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 409
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-423-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 423,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 423
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-425-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 425,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 425
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-429-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 429,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 429
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-500-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 500,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 500
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-502-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 502,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 502
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-503-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 503,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 503
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "http-504-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 504,
+        "body": {
+          "error": {
+            "code": "synthetic_terminal",
+            "message": "bounded fixture",
+            "request_id": "req_mutation"
+          }
+        },
+        "headers": {
+          "Retry-After": "0"
+        }
+      },
+      "expected": {
+        "result": {
+          "kind": "http",
+          "requestOutcome": "unknown",
+          "status": 504
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "postEndUsers-refuse-200",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 200,
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_response",
+          "requestOutcome": "unknown",
+          "status": 200
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "postEndUsers-refuse-202",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 202,
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_response",
+          "requestOutcome": "unknown",
+          "status": 202
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "postEndUsers-refuse-204",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 204,
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_response",
+          "requestOutcome": "unknown",
+          "status": 204
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "patchEndUsersById-refuse-201",
+      "operation": "patchEndUsersById",
+      "input": {
+        "path": {
+          "id": "eu_fixture"
+        },
+        "body": {}
+      },
+      "response": {
+        "status": 201,
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_response",
+          "requestOutcome": "unknown",
+          "status": 201
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "patchEndUsersById-refuse-202",
+      "operation": "patchEndUsersById",
+      "input": {
+        "path": {
+          "id": "eu_fixture"
+        },
+        "body": {}
+      },
+      "response": {
+        "status": 202,
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_response",
+          "requestOutcome": "unknown",
+          "status": 202
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "patchEndUsersById-refuse-204",
+      "operation": "patchEndUsersById",
+      "input": {
+        "path": {
+          "id": "eu_fixture"
+        },
+        "body": {}
+      },
+      "response": {
+        "status": 204,
+        "body": {}
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_response",
+          "requestOutcome": "unknown",
+          "status": 204
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "transport-loss-one-attempt",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {
+          "external_id": "stable-001"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": {}
+      },
+      "transportFailure": true,
+      "expected": {
+        "result": {
+          "kind": "transport",
+          "requestOutcome": "unknown"
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "malformed-success-response",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "response": {
+        "status": 201,
+        "body": {}
+      },
+      "invalidJson": true,
+      "expected": {
+        "result": {
+          "kind": "invalid_response",
+          "requestOutcome": "unknown",
+          "status": 201
+        },
+        "dispatches": 1,
+        "credentials": 1
+      }
+    },
+    {
+      "id": "refuse-retry-option-1",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "options": {
+        "maxRetries": 1
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "refuse-retry-option-2",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "options": {
+        "maxRetries": 2
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    },
+    {
+      "id": "refuse-retry-option--1",
+      "operation": "postEndUsers",
+      "input": {
+        "body": {}
+      },
+      "options": {
+        "maxRetries": -1
+      },
+      "expected": {
+        "result": {
+          "kind": "invalid_input",
+          "requestOutcome": "not_submitted"
+        },
+        "dispatches": 0,
+        "credentials": 0
+      }
+    }
+  ]
+}

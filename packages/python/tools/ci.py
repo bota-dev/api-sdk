@@ -201,6 +201,7 @@ def main(args: list[str] | None = None) -> None:
     execute("dependency-policy", python, [*prefix, "tools/dependencies.py", "--check"], PACKAGE_ROOT, logs)
     execute("installed-metadata", python, [*prefix, "tools/dependencies.py", "--installed"], PACKAGE_ROOT, logs)
     execute("generation", python, [*prefix, "tools/generate.py", "--check"], PACKAGE_ROOT, logs)
+    execute("mutation-generation", python, [*prefix, "tools/generate_mutations.py", "--check"], PACKAGE_ROOT, logs)
     execute("source-tests", python, [*prefix, "-m", "unittest", "discover", "-s", "tests", "-v"], PACKAGE_ROOT, logs)
     execute("source-types", python, [*prefix, "-m", "ty", "check", "src", "--python", str(python), "--python-version", ".".join(options.expected_python.split(".")[:2]), "--error", "all", "--error-on-warning"], PACKAGE_ROOT, logs)
     typechecker = venv / ("Scripts/ty.exe" if os.name == "nt" else "bin/ty")
@@ -216,7 +217,7 @@ def main(args: list[str] | None = None) -> None:
               "runner_sha256": digest(Path(__file__).read_bytes()), "dependency_policy_sha256": digest(json_bytes(policy)),
               "producer_ci_receipt_sha256": candidate["ci_receipt_sha256"] if candidate else None,
               "producer_receipt_sha256": candidate["qualification_receipt_sha256"] if candidate else None,
-              "checks": ["dependency-policy", "installed-metadata", "generation", "source-tests", "source-types", "packed-consumers"],
+              "checks": ["dependency-policy", "installed-metadata", "generation", "mutation-generation", "source-tests", "source-types", "packed-consumers"],
               "limitations": "Synthetic source and offline archive qualification; no publication or live backend acceptance."}
     stage_results(qualification, output / "artifacts", source, record, candidate)
     require(git_source() == source, "source_changed_during_ci_staging")

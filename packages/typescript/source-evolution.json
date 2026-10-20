@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "cohort": "ordinary-end-user-writes-v1",
+  "baseline": {
+    "repository": "bota-dev/api-sdk",
+    "commit": "5eef804afb984c1af0453e6a224a61716fc381b5"
+  },
+  "lineageSha256": "48ab655ced7ec3fe167f1b225224e022ca916063dbbaeadcf23ad538cfb4180c",
+  "reason": "Add two source-certified end-user mutations through the maintained HTTP attempt; retain original read inputs and shared corpus.",
+  "files": {
+    "runtime.ts": "c79491af9d8d248d32e7249a6a388ac0bdfc3e069b70342620d989e42aa14bdb",
+    "index.ts": "0e8fa872e823fd3804373cc8040c8d45f503980826733c42bff5210dab5535bd",
+    "generated/client.ts": "67467d874dd89e1e29f8b925b3505822d4a5df6197095ac9894dacea462e2080",
+    "client-generation.mjs": "b03f9a6707a8802b505abfe26f56fb89f9dda05a4dead07f95e236d11e50991b"
+  }
+}

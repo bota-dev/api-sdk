@@ -8,14 +8,20 @@ const files = ['runtime.ts', 'runtime.test.mjs', 'retry.test.mjs', 'runtime-cons
   'conformance/corpus.schema.json', 'conformance/corpus.json', 'conformance/policy.json',
   'conformance/validate.mjs', 'conformance/runner.test.mjs', 'conformance/provenance.mjs', 'conformance/provenance.json',
   'tsconfig.json', 'package.json', 'workspace.mjs', 'workspace.test.mjs', 'lineage.json', 'migration-provenance.mjs', 'generated/migration-provenance.json', 'LICENSE', 'cohort.json', 'input.json',
-  'generated/schema.d.ts', 'generated/operations.json', 'generated/provenance.json'];
+  'generated/schema.d.ts', 'generated/operations.json', 'generated/provenance.json',
+  'migration-policy.mjs', 'migration.test.mjs', 'source-evolution.json', 'node-util.d.ts',
+  'mutation-contract.ts', 'mutation-consumer.ts', 'mutation-runtime.test.mjs', 'mutation-generation.test.mjs', 'mutation-project.mjs', 'generate-mutations.mjs',
+  'mutation-cohort.json', 'mutation-input.json', 'mutation-source-openapi.json.gz', 'generated/mutations-schema.d.ts',
+  'generated/mutations-provenance.json', 'mutations/corpus.json', 'mutations/policy.json', 'mutations/validate.mjs',
+  'mutations/runner.test.mjs', 'mutations/provenance.mjs', 'mutations/provenance.json'];
 const hashes = {};
 for (const file of files) hashes[file] = digest(await readFile(new URL(`./${file}`, import.meta.url)));
 const provenance = json({
   version: 1,
-  status: 'beta-read-sdk-experimental',
+  status: 'beta-read-and-end-user-write-sdk-experimental',
   source: cohort.source,
   operationCount: 11,
+  mutationOperationCount: 2,
   typescript: cohort.typescript,
   supportedNode: ['22.23.2', '24.19.0'],
   files: hashes,

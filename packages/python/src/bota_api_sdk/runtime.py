@@ -1,4 +1,4 @@
-"""Maintained async policy for the explicitly admitted eleven-read cohort.
+"""Maintained async policy for admitted reads and ordinary end-user mutations.
 
 Generated types describe responses; this module does not validate full response
 schemas. Caller-injected transports/providers must cooperate with task cancellation.
@@ -16,7 +16,7 @@ from collections.abc import AsyncIterator, Awaitable, Callable, Mapping
 from dataclasses import dataclass, field
 from email.utils import format_datetime, parsedate_to_datetime
 from types import MappingProxyType
-from typing import Protocol, Self, TypeAlias, TypeVar, Generic, TypedDict, NotRequired, cast, override
+from typing import Literal, Protocol, Self, TypeAlias, TypeVar, Generic, TypedDict, NotRequired, cast, override
 from urllib.parse import quote, quote_plus, urlsplit
 
 from .generated.models import JsonValue
@@ -52,6 +52,7 @@ class Request:
     cancel_event: asyncio.Event = field(repr=False)
     deadline: float
     method: str = "GET"
+    body: bytes | None = field(default=None, repr=False)
 
 
 async def _noop() -> None:
@@ -101,6 +102,12 @@ class RequestOptions(TypedDict, total=False):
     cancel_event: asyncio.Event
     timeout_ms: int
     max_retries: int
+
+
+class MutationRequestOptions(TypedDict, total=False):
+    cancel_event: asyncio.Event
+    timeout_ms: int
+    max_retries: Literal[0]
 
 
 class PageOptions(RequestOptions, total=False):
@@ -168,6 +175,43 @@ class BotaApiError(Exception):
         return f"BotaApiError({str(self)!r})"
 
 
+class BotaMutationError(BotaApiError):
+    """Mutation failure; unknown means submission may have taken effect."""
+
+    def __init__(self, kind: str, *, request_outcome: Literal["not_submitted", "unknown"],
+                 status: int | None = None, headers: Mapping[str, str] | None = None,
+                 body: JsonValue = None) -> None:
+        super().__init__(kind, status=status, headers=headers, body=body)
+        if kind in {"invalid_input", "aborted", "deadline"}:
+            self.args = ({"invalid_input": "Invalid API mutation input.",
+                          "aborted": "The mutation was cancelled.",
+                          "deadline": "The mutation deadline expired."}[kind],)
+        self.request_outcome = request_outcome
+
+    @override
+    def __repr__(self) -> str:
+        return f"BotaMutationError({str(self)!r}, request_outcome={self.request_outcome!r})"
+
+
+class BotaMutationCancelledError(asyncio.CancelledError):
+    """Task cancellation retains asyncio semantics and exposes submission uncertainty."""
+
+    kind: Literal["aborted"] = "aborted"
+
+    def __init__(self, *, request_outcome: Literal["not_submitted", "unknown"]) -> None:
+        super().__init__("The mutation was cancelled.")
+        self.request_outcome = request_outcome
+
+    @override
+    def __repr__(self) -> str:
+        return f"BotaMutationCancelledError(request_outcome={self.request_outcome!r})"
+
+
+@dataclass(slots=True)
+class _Submission:
+    invoked: bool = False
+
+
 ReadPrototypeError = BotaApiError
 _LIST_OPERATIONS = frozenset(("getEndUsers", "getDevices", "getRecordings", "getTranscriptions", "getSummaries"))
 _RETRY_OPERATIONS = frozenset(OPERATION_IDS)
@@ -178,6 +222,11 @@ _Parameter = TypedDict("_Parameter", {"in": str, "name": str, "required": NotReq
 class _Definition(TypedDict):
     path: str
     parameters: list[_Parameter]
+
+
+class _MutationDefinition(_Definition):
+    method: str
+    success_status: int
 
 
 # Generated metadata has this reviewed container shape, not a second API schema.
@@ -296,7 +345,12 @@ def _scalar_matches(schema: Mapping[str, object], value: object, depth: int = 0)
 
 
 def _request_url(root: str, operation: object, input: object) -> str:
-    if not isinstance(operation, str) or operation not in _DEFINITIONS:
+    return _defined_request_url(root, operation, input, _DEFINITIONS)
+
+
+def _defined_request_url(root: str, operation: object, input: object,
+                         definitions: Mapping[str, _Definition]) -> str:
+    if not isinstance(operation, str) or operation not in definitions:
         raise BotaApiError("invalid_input")
     if input is UNSET:
         input = {}
@@ -306,7 +360,7 @@ def _request_url(root: str, operation: object, input: object) -> str:
     query = input.get("query", {})
     if not isinstance(path, Mapping) or not isinstance(query, Mapping):
         raise BotaApiError("invalid_input")
-    definition = _DEFINITIONS[operation]
+    definition = definitions[operation]
     parameters = definition["parameters"]
     for name, values in (("path", path), ("query", query)):
         if any(not any(p["in"] == name and p["name"] == key for p in parameters) for key in values):
@@ -339,6 +393,94 @@ def _request_url(root: str, operation: object, input: object) -> str:
     if invalid or not route.startswith("/"):
         raise BotaApiError("invalid_input")
     return root + route + ("?" + "&".join(search) if search else "")
+
+
+def _mutation_body(value: object, scope: _Scope) -> bytes:
+    """Bounded strict JSON snapshot, serialized exactly once before credentials."""
+    if type(value) is not dict:
+        raise BotaApiError("invalid_input")
+    active: set[int] = set()
+    count = 0
+    size = 0
+
+    def budget(extra: int) -> None:
+        nonlocal size
+        size += extra
+        if size > 1024 * 1024:
+            raise BotaApiError("invalid_input")
+
+    def string(text: str) -> None:
+        # Bound before any UTF-8/JSON copy, then count exact ensure_ascii=False
+        # escaping without allocating a second unbounded representation.
+        if len(text) > 1024 * 1024:
+            raise BotaApiError("invalid_input")
+        budget(2)
+        for index, character in enumerate(text):
+            if index % 256 == 0:
+                scope.check()
+            code = ord(character)
+            if 0xD800 <= code <= 0xDFFF:
+                raise BotaApiError("invalid_input")
+            if code < 32:
+                budget(2 if character in "\b\f\n\r\t" else 6)
+            elif character in ('"', "\\"):
+                budget(2)
+            else:
+                budget(1 if code < 128 else 2 if code < 2048 else 3 if code < 65536 else 4)
+
+    def check(part: object, depth: int) -> None:
+        nonlocal count
+        scope.check()
+        count += 1
+        if depth > 64 or count > 100000:
+            raise BotaApiError("invalid_input")
+        kind = type(part)
+        if part is None or kind is bool:
+            budget(4 if part is None or part is True else 5)
+            return
+        if kind is str:
+            string(cast(str, part))
+            return
+        if kind is int:
+            if abs(cast(int, part)) > _SAFE_INTEGER:
+                raise BotaApiError("invalid_input")
+            budget(len(str(part)))
+            return
+        if kind is float:
+            number = cast(float, part)
+            if not math.isfinite(number) or number.is_integer() and abs(number) > _SAFE_INTEGER:
+                raise BotaApiError("invalid_input")
+            budget(len(repr(number)))
+            return
+        if kind not in (dict, list) or id(part) in active:
+            raise BotaApiError("invalid_input")
+        active.add(id(part))
+        try:
+            budget(2 + max(0, len(cast(dict[object, object] | list[object], part)) - 1))
+            if kind is dict:
+                for key, child in cast(dict[object, object], part).items():
+                    if type(key) is not str:
+                        raise BotaApiError("invalid_input")
+                    string(key)
+                    budget(1)
+                    check(child, depth + 1)
+            else:
+                for child in cast(list[object], part):
+                    check(child, depth + 1)
+        finally:
+            active.remove(id(part))
+
+    bad = False
+    encoded = b""
+    try:
+        check(value, 0)
+        encoded = json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(",", ":")).encode("utf-8")
+    except (ValueError, TypeError, UnicodeError, OverflowError, RecursionError):
+        bad = True
+    scope.check()
+    if bad or len(encoded) > 1024 * 1024:
+        raise BotaApiError("invalid_input")
+    return encoded
 
 
 def _scrub(text: str, keys: set[str]) -> str:
@@ -587,7 +729,7 @@ async def _dispose(response: Response | None, scope: _Scope) -> None:
 
 
 class ReadRuntime:
-    """Async reads and bounded pages; generated BotaApiClient supplies named methods."""
+    """Shared async HTTP policy; public BotaApiClient supplies typed named methods."""
 
     def __init__(self, options: ClientOptions) -> None:
         names = {"credentials", "base_url", "allow_loopback_http", "transport", "timeout_ms", "max_response_bytes", "max_retries"}
@@ -642,7 +784,9 @@ class ReadRuntime:
         if failed:
             raise BotaApiError("transport") from None
 
-    async def _attempt(self, url: str, scope: _Scope, secrets: set[str], advice: _AttemptAdvice) -> ReadResult[JsonValue]:
+    async def _attempt(self, url: str, scope: _Scope, secrets: set[str], advice: _AttemptAdvice,
+                       *, method: str = "GET", body_bytes: bytes | None = None,
+                       success_status: int = 200, submission: _Submission | None = None) -> ReadResult[JsonValue]:
         response: Response | None = None
         safe_headers: Mapping[str, str] = MappingProxyType[str, str]({})
         failure: BotaApiError | None = None
@@ -667,8 +811,18 @@ class ReadRuntime:
             if not isinstance(key, str) or not re.fullmatch(r"[\x21-\x7e]{1,8192}", key, re.ASCII):
                 raise BotaApiError("credentials")
             secrets.add(key)
-            request = Request(url, MappingProxyType({"Accept": "application/json", "Authorization": "Bearer " + key}), scope.event, scope.deadline)
-            received = await scope.run(lambda: self._transport.send(request), lambda value: _dispose(value, scope))
+            headers = {"Accept": "application/json", "Authorization": "Bearer " + key}
+            if body_bytes is not None:
+                headers["Content-Type"] = "application/json"
+            request = Request(url, MappingProxyType(headers), scope.event, scope.deadline, method, body_bytes)
+
+            async def send() -> Response:
+                scope.check()
+                if submission is not None:
+                    submission.invoked = True
+                return await self._transport.send(request)
+
+            received = await scope.run(send, lambda value: _dispose(value, scope))
             if not isinstance(received, Response):
                 raise BotaApiError("invalid_response")
             response = received
@@ -694,7 +848,7 @@ class ReadRuntime:
             if raw_headers.get("content-encoding", "").strip().lower() not in ("", "identity"):
                 advice.retry_blocked = True
                 raise BotaApiError("invalid_response", status=response.status, headers=safe_headers)
-            if response.status == 204:
+            if response.status == 204 and method == "GET":
                 result = ReadResult[JsonValue](204, None, safe_headers)
             else:
                 content_type = raw_headers.get("content-type", "").split(";", 1)[0].strip().lower()
@@ -704,9 +858,9 @@ class ReadRuntime:
                 scope.check()
                 if not 200 <= response.status < 300:
                     raise BotaApiError("http", status=response.status, headers=safe_headers, body=_scrub_body(body, secrets))
-                if response.status != 200:
+                if response.status != success_status:
                     raise BotaApiError("invalid_response", status=response.status, headers=safe_headers)
-                result = ReadResult[JsonValue](200, body, safe_headers)
+                result = ReadResult[JsonValue](success_status, body, safe_headers)
         except BotaApiError as error:
             failure = BotaApiError(error.kind, status=response.status if response else error.status,
                                    headers=safe_headers if response else error.headers, body=error.body)
@@ -781,6 +935,79 @@ class ReadRuntime:
         finally:
             self._scopes.discard(scope)
             secrets.clear()
+
+    async def mutate(self, operation_id: str, input: object,
+                       options: MutationRequestOptions | UnsetType = UNSET) -> ReadResult[JsonValue]:
+        """One admitted ordinary mutation attempt, without replay or reconciliation."""
+        from .generated.mutations.operations import MUTATIONS
+
+        mutations = cast(Mapping[str, _MutationDefinition], cast(object, MUTATIONS))
+        submission = _Submission()
+        scope: _Scope | None = None
+        done = asyncio.Event()
+        secrets: set[str] = set()
+        failure: BotaMutationError | BotaMutationCancelledError | None = None
+        result: ReadResult[JsonValue] | None = None
+        try:
+            if self._closed:
+                raise BotaApiError("invalid_input")
+            if options is not UNSET:
+                if type(options) is not dict or any(type(name) is not str for name in options):
+                    raise BotaApiError("invalid_input")
+                plain_options = cast(dict[str, object], cast(object, options))
+                for name in ("timeout_ms", "max_retries"):
+                    if name in plain_options and type(plain_options[name]) not in (int, float):
+                        raise BotaApiError("invalid_input")
+                if "cancel_event" in plain_options and type(plain_options["cancel_event"]) is not asyncio.Event:
+                    raise BotaApiError("invalid_input")
+            checked = _checked_options(options)
+            # The global read retry default is deliberately irrelevant here.
+            _integer(checked.get("max_retries", UNSET), 0, 0, 0)
+            scope = _Scope(_integer(checked.get("timeout_ms", UNSET), self._timeout, 120000),
+                           cast(asyncio.Event | None, checked.get("cancel_event")))
+            self._scopes.add(scope)
+            self._requests.add(done)
+            scope.check()
+            if type(operation_id) is not str or operation_id not in mutations:
+                raise BotaApiError("invalid_input")
+            if type(input) is not dict or any(type(name) is not str for name in input):
+                raise BotaApiError("invalid_input")
+            if any(name not in ("path", "body") for name in input) or "body" not in input:
+                raise BotaApiError("invalid_input")
+            values = cast(dict[str, object], input)
+            if "path" in values:
+                path = values["path"]
+                if type(path) is not dict or any(type(name) is not str for name in path):
+                    raise BotaApiError("invalid_input")
+                plain_path = cast(dict[str, object], cast(object, path))
+                if "id" in plain_path and type(plain_path["id"]) is not str:
+                    raise BotaApiError("invalid_input")
+            definition = mutations[operation_id]
+            url = _defined_request_url(self._root, operation_id,
+                {name: value for name, value in values.items() if name != "body"},
+                mutations)
+            payload = _mutation_body(values["body"], scope)
+            scope.check()
+            result = await self._attempt(url, scope, secrets, _AttemptAdvice(),
+                method=definition["method"], body_bytes=payload,
+                success_status=definition["success_status"], submission=submission)
+        except asyncio.CancelledError:
+            failure = BotaMutationCancelledError(request_outcome="unknown" if submission.invoked else "not_submitted")
+        except BotaApiError as error:
+            failure = BotaMutationError(error.kind, request_outcome="unknown" if submission.invoked else "not_submitted",
+                                        status=error.status, headers=error.headers, body=error.body)
+        except Exception:
+            failure = BotaMutationError("invalid_input", request_outcome="unknown" if submission.invoked else "not_submitted")
+        finally:
+            if scope is not None:
+                self._scopes.discard(scope)
+            self._requests.discard(done)
+            done.set()
+            secrets.clear()
+        if failure is not None:
+            raise failure from None
+        assert result is not None
+        return result
 
     async def pages(self, operation_id: str, input: object = UNSET, options: PageOptions | UnsetType = UNSET) -> AsyncIterator[JsonValue]:
         if self._closed or not isinstance(operation_id, str) or operation_id not in _LIST_OPERATIONS:

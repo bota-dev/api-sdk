@@ -126,7 +126,9 @@ def qualify(python: Path, wheelhouse: Path, lock: Path, output: Path, typechecke
         destination = directory / "consumer.py"
         destination.write_bytes(canonical_source(regular_file(PACKAGE_ROOT, "tests/package_consumer.py").read_bytes()))
         smoke = json.loads(run(executable, ["-I", "-B", str(destination), *(["--runtime-only"] if kind == "wheel" else [])], directory))
-        require(smoke["passed"] is True and smoke["named_methods"] == 11, "installed_consumer_smoke")
+        require(smoke["passed"] is True and smoke["named_methods"] == 11 and smoke["named_mutations"] == 2
+                and smoke["single_attempt_unknown_mutation"] is True
+                and smoke["task_cancellation_preserved"] is True, "installed_consumer_smoke")
         installed = Path(smoke["installed"]).parent
         require(installed.resolve().is_relative_to(venv.resolve()) and source_files(installed) == list(PAYLOAD_FILES), "installed_payload_inventory")
         for payload_name, value in expected.items():
@@ -147,7 +149,7 @@ def qualify(python: Path, wheelhouse: Path, lock: Path, output: Path, typechecke
             failed = subprocess.run([str(typechecker), *common, str(negative)], cwd=directory, env=child_environment(),
                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=120, check=False)
             diagnostics = failed.stdout + failed.stderr
-            require(failed.returncode == 1 and all(f"negative.py:{line}:" in diagnostics for line in (6, 7, 9))
+            require(failed.returncode == 1 and all(f"negative.py:{line}:" in diagnostics for line in (6, 7, 9, 11, 12, 13, 14))
                     and "unresolved-import" not in diagnostics, "negative_installed_type_consumer")
             typed = {"checker": "ty 0.0.90", "positive": positive.strip(), "negative_exit": failed.returncode,
                      "negative_diagnostics_sha256": digest(diagnostics.encode())}

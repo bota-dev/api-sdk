@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "cohort": "ordinary-end-user-writes-v1",
+  "operations": ["postEndUsers", "patchEndUsersById"],
+  "attempts": 1,
+  "automaticIdempotencyHeader": false,
+  "automaticReconciliation": false,
+  "outcomes": ["not_submitted", "unknown"],
+  "body": {"root": "object", "maxDepth": 64, "maxNodes": 100000, "maxUtf8Bytes": 1048576, "safeIntegralNumbers": true, "wellFormedUnicode": true},
+  "successStatuses": {"postEndUsers": 201, "patchEndUsersById": 200},
+  "responseValidation": "bounded-json-only",
+  "reconciliation": "caller-owned-explicit-read"
+}

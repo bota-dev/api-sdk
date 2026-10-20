@@ -105,8 +105,8 @@ class PackagePolicyTests(unittest.TestCase):
     def test_exact_synthetic_wheel_sdist_and_record_roundtrip(self) -> None:
         payload, wheel, sdist = fixture()
         result = policy.verify_archives(zip_bytes(wheel), tar_bytes(sdist), payload)
-        self.assertEqual(result["wheel_files"], 15)
-        self.assertEqual(result["sdist_files"], 15)
+        self.assertEqual(result["wheel_files"], 21)
+        self.assertEqual(result["sdist_files"], 21)
 
     def test_refuses_absolute_traversal_ambiguous_control_and_drive_paths(self) -> None:
         for name in ("/file", "../file", "a/../file", "a/./file", "a//file", "a\\file", "C:file", "a\x00file", "a\x7ffile", ""):

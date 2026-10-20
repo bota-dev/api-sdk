@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "status": "beta-generated-read-client-experimental",
+  "version": 2,
+  "status": "beta-generated-read-and-end-user-write-client-experimental",
   "source": {
     "repository": "bota-dev/docs",
     "commit": "0eaaa8a516deb9c56054ecaf78ddf95803d016b7",
@@ -11,11 +11,21 @@
   "schemaSha256": "e6abcec5768db89b950d31a260149be6cd9180824b0d636103e431bee3ff7e80",
   "operationsSha256": "bff2327ee040442dc1732095571ae2f9bec212c7f6d2ad4f4c95a60e38572620",
   "schemaProvenanceSha256": "836b4aa4765477bb2d7a864ea4ca0e865d0ad424fef1f4adcb9f59f39fa5cfed",
-  "generatorScriptSha256": "9e0d4a48022333596e46e6c0265b8e68a8bad99fe289d5579ef969676ec62052",
-  "rendererScriptSha256": "e3d473d507950fddcea6f872a51d2e5a3a75246099cdaa3ce01c4b63d2e61ed9",
-  "clientSourceSha256": "ca672733d089aeca95a4c6f9a4925bf08a5e5ef1793b805322c7f1385fb34ea1",
-  "entrySourceSha256": "f18ab574c027de14a1de748c8179beeefa6eee8d9c67f6543f5c7179da9e18d8",
+  "generatorScriptSha256": "988977db5a2d5388628740956f776d96353dc80cbe4e52fa041c4136d1428e09",
+  "rendererScriptSha256": "b03f9a6707a8802b505abfe26f56fb89f9dda05a4dead07f95e236d11e50991b",
+  "clientSourceSha256": "67467d874dd89e1e29f8b925b3505822d4a5df6197095ac9894dacea462e2080",
+  "entrySourceSha256": "0e8fa872e823fd3804373cc8040c8d45f503980826733c42bff5210dab5535bd",
   "methodsSha256": "8baecde6e89fcfd2531a7b0fab1c8b491b15a91fde1b0c9476e703095530a3f8",
   "operationCount": 11,
-  "typescript": "5.9.3"
+  "typescript": "5.9.3",
+  "mutationSource": {
+    "repository": "bota-dev/docs",
+    "commit": "18f48a771b5948677f2d8a4d34d43f68d0d636dd",
+    "path": "api-reference/openapi.json",
+    "sha256": "cdce8566679e4e843b9cb8ee164b76a1a55c333016b8b66d1cd81b8897b1ccd2"
+  },
+  "mutationProjectionSha256": "3b7c5d595c0caa47989ee6ec0f1bd0fd2e12e1fab8eecba4efc182d1a16afb89",
+  "mutationSchemaSha256": "caefc0d8dcd4a77b9624e2085b0c6467685143c1696c6445b72fb33cfe0e95cf",
+  "mutationSchemaProvenanceSha256": "5abb33b9b5536fbd17c22d508aa34cd83232f1371d59f909bd7568ead924a304",
+  "mutationOperationCount": 2
 }

@@ -8,3 +8,7 @@ async def rejected(client: BotaApiClient) -> None:
     identity = await client.get_auth_identity()
     project: str = identity.data["project_id"]
     print(project)
+    await client.post_end_users({})
+    await client.patch_end_users_by_id({"body": {}})
+    await client.post_end_users({"body": {}}, {"max_retries": 1})
+    await client.patch_end_users_by_id({"path": {"id": 7}, "body": {}})

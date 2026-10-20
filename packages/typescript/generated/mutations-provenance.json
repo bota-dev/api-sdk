@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "status": "ordinary-end-user-write-candidate-not-publication",
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "18f48a771b5948677f2d8a4d34d43f68d0d636dd",
+    "path": "api-reference/openapi.json",
+    "sha256": "cdce8566679e4e843b9cb8ee164b76a1a55c333016b8b66d1cd81b8897b1ccd2"
+  },
+  "projectionSha256": "3b7c5d595c0caa47989ee6ec0f1bd0fd2e12e1fab8eecba4efc182d1a16afb89",
+  "generator": {
+    "name": "openapi-typescript",
+    "version": "7.13.0"
+  },
+  "typescript": "5.9.3",
+  "lockSha256": "f8e8f41b9d9805524b966da135dc83fe8c48708c51e772d3d16197c64c711ad3",
+  "generatorInputSha256": "2c36253c5c8addf4a82f295401245198f67e17273a8b569227761174cab1acbf",
+  "schemaSha256": "caefc0d8dcd4a77b9624e2085b0c6467685143c1696c6445b72fb33cfe0e95cf",
+  "operationCount": 2,
+  "files": {
+    "generate-mutations.mjs": "559bb549d92a40e75de867ebbed0e9a7c58e09d065e00087f0f800797a3398e3",
+    "mutation-project.mjs": "3120d1ec7179379766957719395e860cec1ee552ecffb79dc35e694e3c9846e5",
+    "mutation-contract.ts": "28ef5bc172fb837e0fbf085e83c475affb871d40275b2c79b8c8b92cc640e3fa",
+    "header-references.mjs": "790ea1fef5940c31e919c304149f0b9326b3c539b580ccbfeeb5ef5b7a5d2107"
+  }
+}

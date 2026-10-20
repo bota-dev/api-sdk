@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "status": "python-two-ordinary-mutations-generated-not-qualified",
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "18f48a771b5948677f2d8a4d34d43f68d0d636dd",
+    "path": "api-reference/openapi.json",
+    "sha256": "cdce8566679e4e843b9cb8ee164b76a1a55c333016b8b66d1cd81b8897b1ccd2"
+  },
+  "inputs": {
+    "mutation-cohort.json": "875af802fbb5e9da2a52d1905a0abd01187c1de41cb5edc26a149314b83c22d1",
+    "mutation-input.json": "3b7c5d595c0caa47989ee6ec0f1bd0fd2e12e1fab8eecba4efc182d1a16afb89",
+    "mutation-source-openapi.json.gz": "50e21831a76d4076eaf9519d9c49eb0b78c3af58ebd37ca416ebc268fdd84936",
+    "mutations/corpus.json": "c86761f07b77dfa5ea0f87ea1d10497066ab17b801847a3ff518325989c01b91",
+    "mutations/policy.json": "8aa3e8c078273db1f657ca51f6e357b41dac0fe401b4b508dc1c8261b163dcbd"
+  },
+  "generatorSha256": "b234b2eb4a2038225344958bf1514991b723390e2a9856d59ff5ac5578c3add4",
+  "rendererSha256": "75312d6148d5928741bb3d363f42ba92bce8857c6a46a63ef61751cdf5e31533",
+  "operationCount": 2,
+  "sharedFixtureCount": 36,
+  "outputs": {
+    "__init__.py": "da93704eef2ee9052d167dfd2e1e9e9018ce012eafd7838cbb0ef8d58712f237",
+    "models.py": "a5a54b21a19159e35f581940bcf3996ff38152f91680824fe735ce245f692e6c",
+    "operations.py": "ccb83be94e7ff4b9f17407caeeb82c70a4b261c68567fbe8db4da47df17c3917",
+    "methods.json": "64c2915a2534f68c4d1e198f119fe72201096d81de542c18e3a9e7891a90053b"
+  },
+  "limitations": "Annotation generation only; no runtime response validation, replay contract or publication."
+}

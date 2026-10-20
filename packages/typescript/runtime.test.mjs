@@ -390,7 +390,7 @@ test('native loopback fetch: exact headers, manual redirect refusal and body abo
 
 test('private runtime identity binds maintained source, fixtures, consumer and exact generation provenance', async () => {
   const provenance = JSON.parse(await readFile(new URL('./generated/runtime-provenance.json', import.meta.url)));
-  assert.equal(provenance.status, 'beta-read-sdk-experimental');
+  assert.equal(provenance.status, 'beta-read-and-end-user-write-sdk-experimental');
   assert.equal(provenance.operationCount, 11);
   assert.deepEqual(provenance.workspaceFiles, await workspaceHashes());
   for (const [file, hash] of Object.entries(provenance.files)) {

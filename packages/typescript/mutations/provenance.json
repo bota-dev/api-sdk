@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "status": "language-neutral-mutation-fixtures-not-backend-acceptance",
+  "cohort": "ordinary-end-user-writes-v1",
+  "operationCount": 2,
+  "fixtureCount": 36,
+  "files": {
+    "mutations/corpus.json": "c86761f07b77dfa5ea0f87ea1d10497066ab17b801847a3ff518325989c01b91",
+    "mutations/policy.json": "8aa3e8c078273db1f657ca51f6e357b41dac0fe401b4b508dc1c8261b163dcbd",
+    "mutations/validate.mjs": "391e90dae7bd00e52ce52c02b308b96016f994590b06e726e992ea44bb4a5895",
+    "mutations/runner.test.mjs": "0942630acf5abdd86482d4b7b45b685d601331fc4791239cd81020afc7cfcc78",
+    "mutations/provenance.mjs": "b5174ba0aca6286beaf3dce0a4a2cde2fb81c8c3e4dca84268f0e9925e802f4d",
+    "mutation-contract.ts": "28ef5bc172fb837e0fbf085e83c475affb871d40275b2c79b8c8b92cc640e3fa",
+    "mutation-project.mjs": "3120d1ec7179379766957719395e860cec1ee552ecffb79dc35e694e3c9846e5",
+    "mutation-cohort.json": "875af802fbb5e9da2a52d1905a0abd01187c1de41cb5edc26a149314b83c22d1",
+    "mutation-input.json": "3b7c5d595c0caa47989ee6ec0f1bd0fd2e12e1fab8eecba4efc182d1a16afb89",
+    "mutation-source-openapi.json.gz": "50e21831a76d4076eaf9519d9c49eb0b78c3af58ebd37ca416ebc268fdd84936",
+    "generate-mutations.mjs": "559bb549d92a40e75de867ebbed0e9a7c58e09d065e00087f0f800797a3398e3",
+    "generated/mutations-schema.d.ts": "caefc0d8dcd4a77b9624e2085b0c6467685143c1696c6445b72fb33cfe0e95cf",
+    "generated/mutations-provenance.json": "5abb33b9b5536fbd17c22d508aa34cd83232f1371d59f909bd7568ead924a304",
+    "runtime.ts": "c79491af9d8d248d32e7249a6a388ac0bdfc3e069b70342620d989e42aa14bdb",
+    "mutation-runtime.test.mjs": "f42505d5a5e091cdf676969328071db0a84693b5e8e591fd4ace6f698676258b"
+  }
+}

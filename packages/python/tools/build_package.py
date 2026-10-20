@@ -33,6 +33,7 @@ def build(output: Path) -> dict[str, object]:
     require(canonical_source(regular_file(PACKAGE_ROOT, "LICENSE").read_bytes()) ==
             canonical_source(regular_file(WORKSPACE, "LICENSE").read_bytes()), "source_license_mismatch")
     run(sys.executable, ["-I", "-B", "tools/generate.py", "--check"], PACKAGE_ROOT)
+    run(sys.executable, ["-I", "-B", "tools/generate_mutations.py", "--check"], PACKAGE_ROOT)
     run(sys.executable, ["-I", "-B", "tools/dependencies.py", "--check"], PACKAGE_ROOT)
     installed = json.loads(run(sys.executable, ["-I", "-B", "tools/dependencies.py", "--installed"], PACKAGE_ROOT))
     # Include the exact package, reviewed shared contract/corpus and lock/license

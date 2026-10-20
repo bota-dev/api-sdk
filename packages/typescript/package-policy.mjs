@@ -8,8 +8,10 @@ import { gunzipSync } from 'node:zlib';
 export const packageName = '@bota.dev/api-sdk';
 export const emittedFiles = ['cohort.json', 'generated/operations.json', 'generated/provenance.json',
   'generated/runtime-provenance.json', 'generated/schema.d.ts', 'generated/client.js', 'generated/client.d.ts',
-  'generated/client-methods.json', 'generated/client-provenance.json', 'input.json', 'runtime.d.ts', 'runtime.js', 'index.js', 'index.d.ts'];
-export const compiledFiles = ['runtime.js', 'runtime.d.ts', 'index.js', 'index.d.ts', 'generated/client.js', 'generated/client.d.ts'];
+  'generated/client-methods.json', 'generated/client-provenance.json', 'input.json', 'runtime.d.ts', 'runtime.js', 'index.js', 'index.d.ts',
+  'mutation-contract.js', 'mutation-contract.d.ts', 'mutation-cohort.json', 'mutation-input.json',
+  'generated/mutations-schema.d.ts', 'generated/mutations-provenance.json'];
+export const compiledFiles = ['runtime.js', 'runtime.d.ts', 'index.js', 'index.d.ts', 'generated/client.js', 'generated/client.d.ts', 'mutation-contract.js', 'mutation-contract.d.ts'];
 export const packedFiles = ['LICENSE', 'README.md', 'package.json', 'dist/package-provenance.json', ...emittedFiles.map(name => `dist/${name}`)].sort();
 export const buildInputs = ['runtime.ts', 'index.ts', 'generated/client.ts', 'generated/client-methods.json', 'generated/client-provenance.json',
   'generate-client.mjs', 'client-generation.mjs', 'client.test.mjs', 'client-consumer.ts', 'package.json', 'workspace.mjs', 'workspace.test.mjs', 'lineage.json', 'migration-provenance.mjs', 'generated/migration-provenance.json', 'LICENSE', 'README.md',
@@ -18,7 +20,13 @@ export const buildInputs = ['runtime.ts', 'index.ts', 'generated/client.ts', 'ge
   'package.test.mjs', 'cohort.json', 'input.json', 'generated/schema.d.ts', 'generated/operations.json',
   'generated/provenance.json', 'generated/runtime-provenance.json',
   'conformance/corpus.schema.json', 'conformance/corpus.json', 'conformance/policy.json',
-  'conformance/validate.mjs', 'conformance/runner.test.mjs', 'conformance/provenance.mjs', 'conformance/provenance.json'];
+  'conformance/validate.mjs', 'conformance/runner.test.mjs', 'conformance/provenance.mjs', 'conformance/provenance.json',
+  'node-util.d.ts', 'migration-policy.mjs', 'migration.test.mjs', 'source-evolution.json',
+  'mutation-contract.ts', 'mutation-consumer.ts', 'mutation-runtime.test.mjs', 'mutation-generation.test.mjs', 'mutation-project.mjs', 'generate-mutations.mjs',
+  'mutation-cohort.json', 'mutation-input.json', 'mutation-source-openapi.json.gz',
+  'generated/mutations-schema.d.ts', 'generated/mutations-provenance.json',
+  'mutations/corpus.json', 'mutations/policy.json', 'mutations/validate.mjs', 'mutations/runner.test.mjs',
+  'mutations/provenance.mjs', 'mutations/provenance.json'];
 export const hash = bytes => createHash('sha256').update(bytes).digest('hex');
 export const json = value => `${JSON.stringify(value, null, 2)}\n`;
 export function childEnvironment() {

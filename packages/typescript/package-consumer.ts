@@ -8,6 +8,15 @@ const client = createReadPrototype({ credentials: async ({ signal, baseUrl }) =>
 } });
 async function consumer() {
   const named = new BotaApiClient({ credentials: 'synthetic_named_packed' });
+  const created = await named.postEndUsers({ body: { external_id: 'packed001', metadata: { nested: null } } }, { maxRetries: 0 });
+  const createdStatus: 201 = created.status;
+  const updated = await named.patchEndUsersById({ path: { id: 'eu_packed' }, body: { metadata: {} } });
+  const updatedStatus: 200 = updated.status;
+  void createdStatus; void updatedStatus;
+  // @ts-expect-error required JSON object body
+  await named.postEndUsers({});
+  // @ts-expect-error explicit mutation retry is refused
+  await named.postEndUsers({ body: {} }, { maxRetries: 1 });
   const namedDetail = await named.getRecordingsById({ path: { id: 'rec_opaque' } }, { maxRetries: 0 });
   if (namedDetail.status === 200) {
     const recording: components['schemas']['RecordingDetail'] = namedDetail.data;

@@ -17,8 +17,8 @@ not by themselves validate arbitrary server response bodies.
 
 | Package | Registry identity | Scope |
 | --- | --- | --- |
-| `packages/typescript/` | npm `@bota.dev/api-sdk` | Node-only initial eleven-read cohort |
-| `packages/python/` | PyPI `bota-api-sdk` | Experimental async-only eleven-read cohort; independent qualification |
+| `packages/typescript/` | npm `@bota.dev/api-sdk` | Node-only eleven reads and ordinary end-user creation/update |
+| `packages/python/` | PyPI `bota-api-sdk` | Async eleven reads and the same two writes; independent qualification |
 
 The root npm workspace is private. It owns the dependency lock, governance and
 qualification entry points. The TypeScript package owns generation, maintained
@@ -54,9 +54,31 @@ handling. Each attempt repeats current backend admission and may consume rate
 capacity and request accounting. Retried reads and pages can observe changed
 state; they do not provide a snapshot or a deduplication guarantee.
 
-Mutations, Ask/SSE recovery, recording transfer and device control are outside
-the initial cohort. An idempotency header alone is not an approved replay
-contract, and loss of a response is not evidence that a remote action stopped.
+The separate ordinary end-user write cohort admits only POST creation (201)
+and PATCH update (200). Both languages use their maintained HTTP attempt and
+response parser, serialize an explicit JSON object before credential retrieval,
+and make one attempt. Writes do not inherit read retries, send an automatic
+idempotency header or perform hidden reconciliation. A mutation error reports
+`not_submitted` before transport invocation and conservatively `unknown`
+afterward, including HTTP errors, cancellation and lost responses. This is
+client-observed submission uncertainty, not backend transaction status.
+Python external task cancellation remains an `asyncio.CancelledError` subclass
+with the same outcome metadata; explicit cancellation events use the SDK error.
+
+Persist a nonempty external ID before creation and the returned Bota ID when
+known. Callers can explicitly look up current state before deciding what to do
+next; a missing row does not prove a timed-out create cannot still finish.
+PATCH metadata replaces the stored object, and a repeated PATCH can overwrite
+a concurrent update. End-user deletion, token issuance, processing, Ask/SSE
+recovery, recording transfer and device control retain separate policies.
+
+The original eleven-read projection and 94 fixtures retain their byte identity.
+New write schemas have a separate pinned public source and projection rather
+than rewriting that historical input. Generated provenance binds both. The
+immutable private-import lineage records the original migration; an explicit
+post-migration evolution record identifies the four changed runtime/client
+files. Read fixtures remain regression evidence, not proof of unchanged
+runtime source after adding writes.
 
 ## Qualification and delivery
 

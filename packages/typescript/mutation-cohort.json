@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "18f48a771b5948677f2d8a4d34d43f68d0d636dd",
+    "path": "api-reference/openapi.json",
+    "sha256": "cdce8566679e4e843b9cb8ee164b76a1a55c333016b8b66d1cd81b8897b1ccd2"
+  },
+  "generator": {
+    "name": "openapi-typescript",
+    "version": "7.13.0"
+  },
+  "typescript": "5.9.3",
+  "baseUrl": "https://api.bota.dev/v1",
+  "operations": [
+    {
+      "operationId": "postEndUsers",
+      "method": "POST",
+      "path": "/end-users",
+      "successStatus": 201
+    },
+    {
+      "operationId": "patchEndUsersById",
+      "method": "PATCH",
+      "path": "/end-users/{id}",
+      "successStatus": 200
+    }
+  ],
+  "projectionSha256": "3b7c5d595c0caa47989ee6ec0f1bd0fd2e12e1fab8eecba4efc182d1a16afb89"
+}

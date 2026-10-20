@@ -6,8 +6,24 @@ import { resolve } from 'node:path';
 // Import itself must not authenticate, contact the network or evaluate TS source.
 let ambientCalls = 0;
 globalThis.fetch = async () => { ambientCalls++; assert.fail('unexpected ambient network'); };
-const { BotaApiClient, createReadPrototype, ReadPrototypeError } = await import('@bota.dev/api-sdk');
+const { BotaApiClient, createReadPrototype, ReadPrototypeError, BotaMutationError } = await import('@bota.dev/api-sdk');
 assert.equal(ambientCalls, 0);
+const mutationCalls = [];
+const writes = new BotaApiClient({ credentials: 'synthetic_packed_write', maxRetries: 2, fetch: async (url, init) => {
+  mutationCalls.push({ url: new URL(url), init });
+  return new Response(JSON.stringify({ id: 'eu_packed', unknown: null }), { status: init.method === 'POST' ? 201 : 200,
+    headers: { 'content-type': 'application/json' } });
+} });
+assert.equal((await writes.postEndUsers({ body: { external_id: 'packed-001' } })).status, 201);
+assert.equal((await writes.patchEndUsersById({ path: { id: 'eu_packed' }, body: { metadata: {} } })).status, 200);
+assert.deepEqual(mutationCalls.map(call => [call.init.method, call.url.pathname]), [['POST', '/v1/end-users'], ['PATCH', '/v1/end-users/eu_packed']]);
+for (const call of mutationCalls) assert.equal(Object.keys(call.init.headers).some(name => name.toLowerCase() === 'idempotency-key'), false);
+let mutationLossCalls = 0;
+const lostWrite = new BotaApiClient({ credentials: 'synthetic_loss', maxRetries: 2, fetch: async () => { mutationLossCalls++; throw Error('synthetic lost response'); } });
+await assert.rejects(lostWrite.postEndUsers({ body: {} }), error => error instanceof BotaMutationError && error.kind === 'transport' && error.requestOutcome === 'unknown');
+assert.equal(mutationLossCalls, 1);
+await assert.rejects(lostWrite.mutate('patchEndUsersById', { path: { id: 'eu_packed' }, body: {} }), { requestOutcome: 'unknown' });
+assert.equal(mutationLossCalls, 2);
 const moduleUrl = import.meta.resolve('@bota.dev/api-sdk');
 const expected = resolve('node_modules/@bota.dev/api-sdk/dist/index.js');
 assert.equal(fileURLToPath(moduleUrl), expected);
@@ -88,4 +104,4 @@ assert.equal(pageCalls[1].searchParams.get('cursor'), 'opaque/+=cursor');
 for (const call of pageCalls) { assert.equal(call.searchParams.get('serial_number'), 'serial exact'); assert.equal(call.searchParams.get('limit'), '1'); }
 assert.equal(ambientCalls, 0);
 console.log(JSON.stringify({ node: process.version, imported: 'dist/index.js', nativeTypeScript: false, operationCalls: 11, namedOperationCalls: 11,
-  deniedCalls, pageCalls: 2, ambientCalls, passed: true }));
+  mutationOperationCalls: mutationCalls.length, mutationLossCalls, deniedCalls, pageCalls: 2, ambientCalls, passed: true }));

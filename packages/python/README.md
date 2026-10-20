@@ -11,6 +11,13 @@ public OpenAPI projection; they describe supported fields without validating,
 normalizing or removing arbitrary JSON returned by a server. Integer/decimal
 wire strings, quoted `"NaN"`, null and additional fields retain their wire shape.
 
+An independently pinned ordinary-write cohort adds `post_end_users({"body": {}})`
+and `patch_end_users_by_id({"path": {"id": "..."}, "body": {}})`. These require an
+explicit JSON object body, including for an empty update. Unknown JSON fields are
+transmitted; backend validation controls field acceptance and permissions. PATCH
+replaces supplied metadata according to the backend contract. Response models
+live in `mutation_models`; original read models remain pinned independently.
+
 ```python
 import asyncio
 import os
@@ -39,9 +46,28 @@ The maintained runtime owns origin binding, strict JSON parsing, bounded
 response reads, total deadlines, cancellation, eligible read retries and
 pagination. Retries apply only to the eleven reviewed GET operations. They do
 not establish a snapshot, mutation replay contract or remote cancellation.
-Ask/streaming, writes, uploads and physical device control are outside this
-package's first cohort. `is_test_mode` in identity does not certify test/live
+Ask/streaming, other writes, uploads and physical device control are outside this
+package's admitted cohorts. `is_test_mode` in identity does not certify test/live
 data or billing isolation.
+
+Ordinary writes make exactly one transport attempt. The global read retry setting
+does not apply; mutation request `max_retries` accepts only `0`. The SDK adds no
+idempotency header and performs no follow-up read or automatic reconciliation.
+`BotaMutationError` extends `BotaApiError` with `request_outcome`: `not_submitted`
+means transport invocation never began; `unknown` means it began, including HTTP
+errors, response loss, malformed replies, explicit cancellation or deadline expiry.
+This does not assert that the backend committed a change. External task
+cancellation propagates `BotaMutationCancelledError`, an `asyncio.CancelledError`
+subclass with fixed `kind="aborted"` and the same `request_outcome` metadata;
+ordinary `except Exception` does not intercept it. Explicit `cancel_event` uses
+`BotaMutationError`. Read task cancellation remains unchanged. Reconcile using an explicitly selected read and correlation
+data; never repeat creation merely because a response was lost.
+
+Mutation JSON is serialized once before credential resolution under the request
+deadline. Objects/lists, strings containing valid Unicode, finite numbers,
+booleans and null are supported. Integral numbers must fit JavaScript's safe
+integer range; cycles, non-JSON Python objects, depth over 64, more than 100,000
+value nodes or serialized UTF-8 over 1 MiB refuse before credential access.
 
 Default native HTTP uses pinned `aiohttp` without optional extras. Environment
 proxy/netrc credentials, ambient cookies and redirects are not implicit
@@ -59,6 +85,7 @@ unlocked install. With a reviewed environment already prepared:
 
 ```sh
 python -I tools/generate.py --check
+python -I tools/generate_mutations.py --check
 python -I tools/build_package.py --output-dir /absolute/new/output
 python -I tools/verify_package.py --python /absolute/python --wheelhouse /absolute/wheelhouse --lock /absolute/hash-lock --typechecker /absolute/ty --output-dir /absolute/new/qualification
 ```

@@ -7,11 +7,12 @@ communicate with physical Bota devices are the separate Bota App SDK family.
 
 The TypeScript package identity is `@bota.dev/api-sdk`. Its initial scope is
 the eleven reviewed GET operations for credential identity and reading end
-users, devices, recordings, transcriptions, and summaries. It is a Node-only
+users, devices, recordings, transcriptions, and summaries, plus the separately
+certified ordinary end-user creation/update cohort. It is a Node-only
 candidate; repository qualification does not establish npm publication or a
 deployed-service acceptance result.
 
-The Python candidate, `bota-api-sdk`, implements the same eleven-read cohort
+The Python candidate, `bota-api-sdk`, implements the same eleven reads and two writes
 through an async-only client. It has its own maintained asyncio/aiohttp runtime,
 generated models, shared contract cases and wheel/sdist qualification. These
 are experimental source candidates; Python qualification and PyPI publication
@@ -79,6 +80,7 @@ python -m venv /absolute/path/to/venv
   --wheelhouse /absolute/path/to/wheelhouse --fetch
 /absolute/path/to/venv/bin/python -I -B packages/python/tools/dependencies.py --installed
 /absolute/path/to/venv/bin/python -I -B packages/python/tools/generate.py --check
+/absolute/path/to/venv/bin/python -I -B packages/python/tools/generate_mutations.py --check
 /absolute/path/to/venv/bin/python -I -B -m unittest discover -s packages/python/tests
 ```
 

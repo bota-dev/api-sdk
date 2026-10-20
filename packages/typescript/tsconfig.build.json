@@ -11,5 +11,5 @@
     "rootDir": ".",
     "outDir": "./dist"
   },
-  "include": ["index.ts", "runtime.ts", "generated/client.ts", "generated/schema.d.ts"]
+  "include": ["index.ts", "runtime.ts", "generated/client.ts", "generated/schema.d.ts", "node-util.d.ts", "mutation-contract.ts", "generated/mutations-schema.d.ts"]
 }

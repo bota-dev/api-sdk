@@ -2,8 +2,9 @@
 
 Experimental Node.js package candidate `@bota.dev/api-sdk@0.1.0-beta.0`, licensed
 under MIT. This repository prepares and tests local tarballs; it does not publish
-them. Node.js 22.23.2 and 24.19.0 are the qualified runtimes. Browser, React Native
-and Python support remain unqualified.
+them. Node.js 22.23.2 and 24.19.0 are the qualified TypeScript runtimes. Browser
+and React Native are outside this cohort; the separate async Python package has
+its own declared runtime and qualification matrix.
 
 ```ts
 import { BotaApiClient } from '@bota.dev/api-sdk';
@@ -29,9 +30,38 @@ The generated `BotaApiClient` exposes eleven GET methods: `getAuthIdentity`,
 `getEndUsers`, `getEndUsersById`, `getDevices`, `getDevicesById`, `getRecordings`,
 `getRecordingsById`, `getTranscriptions`, `getTranscriptionsById`, `getSummaries`,
 and `getSummariesById`. Detail methods take `{ path: { id } }`. List methods accept
-the filters declared by the pinned contract. No write or streaming methods are
-included. The compatibility factory `createReadPrototype` offers the same reads
+the filters declared by the pinned contract. The compatibility factory
+`createReadPrototype` offers the same reads
 through `read(operationId, input, options)`.
+
+The separate ordinary end-user write cohort adds `postEndUsers({ body })` and
+`patchEndUsersById({ path: { id }, body })`, returning exact 201 and 200 results.
+`client.mutate(operationId, input, options)` and the compatibility factory's
+`mutate` use the same transport. A JSON object body is required, including `{}`.
+PATCH replaces metadata rather than merging, leaves omitted fields unchanged
+and cannot change `external_id`. Unknown JSON properties are transmitted; the
+backend strips unknown root fields and owns business validation.
+
+Writes make one attempt regardless of the global read retry setting. They
+refuse per-call `maxRetries` other than zero, add no `Idempotency-Key`, and do
+no automatic follow-up reads. `BotaMutationError.requestOutcome` is
+`not_submitted` before transport invocation and conservatively `unknown`
+after invocation, including HTTP errors or lost/cancelled responses. It is not
+a backend transaction status. Persist a nonempty external ID before creation,
+and save the Bota ID when returned. Reconcile explicitly with `getEndUsers`
+filtered by that external ID or `getEndUsersById` before deciding on another
+write. A missing row does not prove an in-flight create stopped, and a duplicate
+409 does not recover the earlier result. PATCH resubmission can overwrite a
+concurrent update. The SDK never silently replaces a saved resource ID.
+
+Write bodies use a bounded interoperable JSON subset: plain objects, dense
+arrays, null, booleans, well-formed Unicode and finite numbers. Integral values
+must fit JavaScript's safe integer range; encode larger identifiers as strings.
+Depth is at most 64, value nodes 100,000, and encoded UTF-8 one MiB. Accessors,
+proxies, custom classes, undefined, cycles and callable serialization hooks are
+refused before credentials. Ordinary string-valued `toJSON` fields are data.
+The body is snapshotted once under the total deadline. Streaming, processing,
+deletion, credential issuance and device workflows remain outside this cohort.
 
 Responses expose `data`, HTTP `status` and raw string `headers`. Wire strings,
 nullable fields and unknown JSON fields are preserved: numeric PostgreSQL fields
@@ -72,7 +102,11 @@ disabled. Root `npm run check`, `npm test`, `npm run build`, `npm run lint` and
 identical tarball in fresh offline consumers with strict types and emitted ESM
 JavaScript, without native TypeScript imports or generator dependencies.
 
-The contract is pinned to public docs source `0eaaa8a516deb9c56054ecaf78ddf95803d016b7`.
+The read contract is pinned to public docs source `0eaaa8a516deb9c56054ecaf78ddf95803d016b7`.
+The separately generated two-write input records its own public source in
+`mutation-cohort.json`. The original read input, schemas and 94-case corpus
+stay byte-identical; 36 additional language-neutral mutation fixtures qualify
+the new cohort with native transport/cancellation/bounds checks.
 Generation uses openapi-typescript 7.13.0 and TypeScript 5.9.3. A maintained,
 provenance-bound header-reference adapter corrects that generator's handling of
 optional referenced response headers. The source projection remains unchanged.

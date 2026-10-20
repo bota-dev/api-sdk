@@ -1,8 +1,8 @@
-import { BotaApiClient, createReadPrototype, type operations, type components, type ReadData, type ReadResult, type ReadInput, type RequestOptions } from './index.ts';
+import { BotaApiClient, createReadPrototype, type operations, type components, type ReadData, type ReadResult, type ReadInput, type RequestOptions, type MutationOperation } from './index.ts';
 
 type Expect<T extends true> = T;
 type Equal<A, B> = (<T>() => T extends A ? 1 : 2) extends (<T>() => T extends B ? 1 : 2) ? true : false;
-type NamedReads = Omit<BotaApiClient, 'pages'>;
+type NamedReads = Omit<BotaApiClient, 'pages' | 'mutate' | MutationOperation>;
 type ExactMethodCohort = Expect<Equal<keyof NamedReads, keyof operations>>;
 type RequiredParameters = { [O in keyof operations]: operations[O]['parameters']['path'] extends undefined
   ? (input?: ReadInput<O>, options?: RequestOptions) => Promise<ReadResult<O>>

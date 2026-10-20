@@ -32,7 +32,7 @@ class AiohttpTransport:
         result: Response | None = None
         try:
             loop = asyncio.get_running_loop()
-            if request.method != "GET" or self._closed or self._loop is not None and self._loop is not loop:
+            if request.method not in {"GET", "POST", "PATCH"} or self._closed or self._loop is not None and self._loop is not loop:
                 raise NativeTransportError()
             if self._session is None:
                 self._loop = loop
@@ -56,7 +56,7 @@ class AiohttpTransport:
                 return await handler(req)
 
             received = await self._session.request(
-                "GET", URL(request.url, encoded=True), headers=request.headers,
+                request.method, URL(request.url, encoded=True), headers=request.headers, data=request.body,
                 allow_redirects=False, middlewares=(one_handler,),
                 timeout=aiohttp.ClientTimeout(total=None), ssl=True, proxy=None, auto_decompress=False,
             )

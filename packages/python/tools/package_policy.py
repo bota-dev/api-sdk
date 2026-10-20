@@ -27,13 +27,17 @@ SOURCE_DATE_EPOCH = "946684800"
 SHARED_INPUTS = ("LICENSE", "package.json", "package-lock.json", "scripts/check-licenses.mjs",
     "packages/typescript/cohort.json", "packages/typescript/input.json", "packages/typescript/source-openapi.json.gz",
     "packages/typescript/conformance/corpus.json", "packages/typescript/conformance/corpus.schema.json",
-    "packages/typescript/conformance/policy.json")
+    "packages/typescript/conformance/policy.json", "packages/typescript/mutation-cohort.json",
+    "packages/typescript/mutation-input.json", "packages/typescript/mutation-source-openapi.json.gz",
+    "packages/typescript/mutations/corpus.json", "packages/typescript/mutations/policy.json")
 MAX_ARCHIVE = 8 * 1024 * 1024
 MAX_EXPANDED = 16 * 1024 * 1024
 SOURCE_FILES = (
-    "__init__.py", "runtime.py", "native_transport.py", "py.typed",
+    "__init__.py", "client.py", "runtime.py", "native_transport.py", "py.typed",
     "generated/__init__.py", "generated/client.py", "generated/models.py",
     "generated/operations.py", "generated/methods.json", "generated/provenance.json",
+    "generated/mutations/__init__.py", "generated/mutations/models.py", "generated/mutations/operations.py",
+    "generated/mutations/methods.json", "generated/mutations/provenance.json",
 )
 PAYLOAD_FILES = tuple(sorted((*SOURCE_FILES, "package_provenance.json")))
 WHEEL_FILES = tuple(sorted((*[f"bota_api_sdk/{name}" for name in PAYLOAD_FILES],

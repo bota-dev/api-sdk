@@ -11,5 +11,5 @@
     "skipLibCheck": false,
     "noEmit": true
   },
-  "include": ["consumer.ts", "runtime.ts", "runtime-consumer.ts", "index.ts", "generated/client.ts", "client-consumer.ts", "generated/schema.d.ts"]
+  "include": ["consumer.ts", "runtime.ts", "runtime-consumer.ts", "index.ts", "generated/client.ts", "client-consumer.ts", "generated/schema.d.ts", "node-util.d.ts", "mutation-contract.ts", "mutation-consumer.ts", "generated/mutations-schema.d.ts"]
 }

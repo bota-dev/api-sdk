@@ -11,8 +11,10 @@ const manifest = JSON.parse(await readFile(new URL('./package.json', import.meta
 assertManifest(manifest);
 run(process.execPath, ['migration-provenance.mjs', '--check'], root);
 run(process.execPath, ['generate.mjs', '--check'], root);
+run(process.execPath, ['generate-mutations.mjs', '--check'], root);
 run(process.execPath, ['generate-client.mjs', '--check'], root);
 run(process.execPath, ['conformance/provenance.mjs', '--check'], root);
+run(process.execPath, ['mutations/provenance.mjs', '--check'], root);
 run(process.execPath, ['runtime-provenance.mjs', '--check'], root);
 run(process.execPath, ['check-licenses.mjs'], root);
 assert.equal(run(process.execPath, [compilerPath, '--version'], root).trim(), `Version ${manifest.devDependencies.typescript}`);

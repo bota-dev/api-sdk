@@ -14,6 +14,7 @@ globalThis.fetch = originalFetch;
 const { BotaApiClient } = entry;
 const input = JSON.parse(await readFile(new URL('./input.json', import.meta.url)));
 const methods = JSON.parse(await readFile(new URL('./generated/client-methods.json', import.meta.url)));
+const mutations = JSON.parse(await readFile(new URL('./mutation-cohort.json', import.meta.url)));
 const key = 'synthetic_named_client_key';
 const jsonResponse = (body, options = {}) => new Response(JSON.stringify(body), { ...options,
   headers: { 'content-type': 'application/json', ...options.headers } });
@@ -28,7 +29,7 @@ test('root adds BotaApiClient while preserving every factory/runtime export with
   assert.deepEqual(Object.keys(client), []);
   assert.equal(JSON.stringify(client), '{}');
   assert.ok(!inspect(client).includes(key));
-  assert.deepEqual(Object.getOwnPropertyNames(BotaApiClient.prototype).sort(), ['constructor', 'pages', ...methods.map(m => m.method)].sort());
+  assert.deepEqual(Object.getOwnPropertyNames(BotaApiClient.prototype).sort(), ['constructor', 'pages', 'mutate', ...methods.map(m => m.method), ...mutations.operations.map(m => m.operationId)].sort());
 });
 
 test('all eleven generated methods delegate their exact operation, inputs, response fields and headers', async () => {
@@ -112,17 +113,40 @@ test('generator derives required inputs from contract parameters and refuses ide
 });
 
 test('named-client generation and separate provenance bind exact source, schema, renderer, entry and method inventory', async () => {
-  const rendered = renderReadClient(input, cohort.paths);
+  const rendered = renderReadClient(input, cohort.paths, mutations.operations);
   const read = name => readFile(new URL(`./${name}`, import.meta.url));
   assert.equal((await read('generated/client.ts')).toString(), rendered.client);
   assert.equal((await read('index.ts')).toString(), rendered.entry);
   assert.deepEqual(methods, rendered.methods);
   const provenance = JSON.parse(await read('generated/client-provenance.json'));
-  assert.equal(provenance.status, 'beta-generated-read-client-experimental');
+  assert.equal(provenance.status, 'beta-generated-read-and-end-user-write-client-experimental');
   assert.equal(provenance.operationCount, 11); assert.deepEqual(provenance.source, cohort.source);
   for (const [property, file] of Object.entries({ projectionSha256: 'input.json', schemaSha256: 'generated/schema.d.ts',
     operationsSha256: 'generated/operations.json', schemaProvenanceSha256: 'generated/provenance.json',
     generatorScriptSha256: 'generate-client.mjs', rendererScriptSha256: 'client-generation.mjs',
     clientSourceSha256: 'generated/client.ts', entrySourceSha256: 'index.ts' })) assert.equal(provenance[property], digest(await read(file)), property);
   assert.equal(provenance.methodsSha256, digest(json(methods)));
+  assert.equal(provenance.mutationOperationCount, 2);
+  assert.deepEqual(provenance.mutationSource, mutations.source);
+  for (const [property, file] of Object.entries({ mutationProjectionSha256: 'mutation-input.json',
+    mutationSchemaSha256: 'generated/mutations-schema.d.ts', mutationSchemaProvenanceSha256: 'generated/mutations-provenance.json' }))
+    assert.equal(provenance[property], digest(await read(file)), property);
+});
+
+test('generated write methods use the existing client runtime and preserve single attempt outcomes', async () => {
+  const calls = [];
+  const client = new BotaApiClient({ maxRetries: 2, credentials: key, fetch: async (url, init) => {
+    calls.push({ url: new URL(url), init });
+    return jsonResponse({ id: 'eu_opaque', unknown: null }, { status: init.method === 'POST' ? 201 : 200 });
+  } });
+  assert.equal((await client.postEndUsers({ body: {} })).status, 201);
+  assert.equal((await client.patchEndUsersById({ path: { id: 'eu_opaque' }, body: { metadata: {} } })).status, 200);
+  assert.equal((await client.mutate('postEndUsers', { body: {} })).status, 201);
+  assert.deepEqual(calls.map(call => [call.init.method, call.url.pathname]), [['POST', '/v1/end-users'], ['PATCH', '/v1/end-users/eu_opaque'], ['POST', '/v1/end-users']]);
+  const lost = new BotaApiClient({ credentials: key, maxRetries: 2, fetch: async () => { throw Error('synthetic loss'); } });
+  await assert.rejects(lost.postEndUsers({ body: {} }), { name: 'BotaMutationError', requestOutcome: 'unknown' });
+  for (const change of [{ operationId: 'deleteEndUsersById' }, { method: 'DELETE' }, { path: '/devices' }, { successStatus: 202 }]) {
+    const wrong = structuredClone(mutations.operations); Object.assign(wrong[0], change);
+    assert.throws(() => renderReadClient(input, cohort.paths, wrong), /named_client_mutation_cohort/);
+  }
 });
