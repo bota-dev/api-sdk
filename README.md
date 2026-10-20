@@ -11,15 +11,18 @@ users, devices, recordings, transcriptions, and summaries. It is a Node-only
 candidate; repository qualification does not establish npm publication or a
 deployed-service acceptance result.
 
-Python is a required SDK target under the approved PyPI identity
-`bota-api-sdk`. It is not implemented here yet. There is no placeholder Python
-package and no implied Python parity.
+The Python candidate, `bota-api-sdk`, implements the same eleven-read cohort
+through an async-only client. It has its own maintained asyncio/aiohttp runtime,
+generated models, shared contract cases and wheel/sdist qualification. These
+are experimental source candidates; Python qualification and PyPI publication
+have separate evidence from the TypeScript package.
 
 ## Repository
 
 | Path | Responsibility |
 | --- | --- |
 | `packages/typescript/` | Generated contracts, maintained HTTP runtime, build and qualification |
+| `packages/python/` | Async client, generated contracts, frozen wheel inputs and wheel/sdist qualification |
 | `scripts/check-licenses.mjs` | Installed dependency license gate |
 | `.github/workflows/` | Source and isolated packed-consumer checks; no publication |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Contract ownership, runtime boundaries and required targets |
@@ -66,6 +69,32 @@ cloud, provider, device or private-package credentials.
 Flat-config ESLint checks maintained JavaScript. Generated outputs and build
 artifacts are excluded; strict TypeScript checks run through the package's
 separate check command.
+
+For Python, create an explicit normal CPython virtual environment and acquire
+only the reviewed wheels before running source checks:
+
+```sh
+python -m venv /absolute/path/to/venv
+/absolute/path/to/venv/bin/python -I -B packages/python/tools/install_dependencies.py \
+  --wheelhouse /absolute/path/to/wheelhouse --fetch
+/absolute/path/to/venv/bin/python -I -B packages/python/tools/dependencies.py --installed
+/absolute/path/to/venv/bin/python -I -B packages/python/tools/generate.py --check
+/absolute/path/to/venv/bin/python -I -B -m unittest discover -s packages/python/tests
+```
+
+On Windows, the virtual environment's interpreter is `Scripts/python.exe`.
+Normal installation is offline; `--fetch` explicitly retrieves hash-locked
+public wheels. Python's [dependency policy](packages/python/requirements/README.md)
+covers its separate runtime/build/type-check graph. Package checks use flit_core
+4.1.0 and ty 0.0.90, with positive and negative installed type consumers.
+
+The Python CI producer builds one canonical wheel/sdist twice on Ubuntu with
+CPython 3.12.15. Its downstream jobs run source/native checks and install those
+same artifacts on Linux 3.12.15/3.13.16/3.14.8/3.15.0 and Windows
+3.13.16/3.14.8/3.15.0. Official hosted inputs have no Windows 3.12.15 build;
+bundled Windows 3.12.14 is a separate development check. Free-threaded, debug,
+JIT, PyPy and alternate event-loop implementations are outside this cohort.
+Workflow definition is not evidence that a run passed.
 
 ## Dependency license policy
 

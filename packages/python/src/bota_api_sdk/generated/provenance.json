@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "status": "python-eleven-read-generated-not-qualified",
+  "source": {
+    "repository": "bota-dev/docs",
+    "commit": "0eaaa8a516deb9c56054ecaf78ddf95803d016b7",
+    "path": "api-reference/openapi.json",
+    "sha256": "2cc659ca6cbe527373690cf140e6fb084fa6add50114371a5e8fb82203f52373"
+  },
+  "generatorSha256": "75312d6148d5928741bb3d363f42ba92bce8857c6a46a63ef61751cdf5e31533",
+  "inputs": {
+    "cohort.json": "d424571522d6875c2419ef4761103257e98040e0874170126a91f26db7b90433",
+    "input.json": "873e4b7db33fc026f5dd585d109375395512d031fdae12cb08748640fe4aca65",
+    "source-openapi.json.gz": "078dfd7591dc38eb7821b9abdee77f2b78e26b36b2275116485a41b5526b2d4e",
+    "conformance/corpus.json": "f21f2511c968d540383d3ebb37795c15a35217d1e18af1497850f34093c7b16c",
+    "conformance/corpus.schema.json": "bd52147b27ac68ed6cbcb9374911240cbebf192eeb3a72ef6ed26b85c3d9de56",
+    "conformance/policy.json": "17f255b8d3e4bccad41607e7589b3f47e6be736e37070b1dfdcd94137b2ddc71"
+  },
+  "operationCount": 11,
+  "sharedFixtureCount": 94,
+  "outputs": {
+    "__init__.py": "e0fa0eac5ec8bddda10a9641b87613a96421da105109a8bca3fa25a2c65ddb6d",
+    "models.py": "98a45ee4a2bfb10fb06ce9e21c90ced7c5d2378f3330a707553bbca24d6943c2",
+    "client.py": "2c57bf9f348558efaf36454f5163d27ea89c1f8f8055290edefa5032f01906fd",
+    "operations.py": "ee7011c6ab5e92c0ab46a3497246683d8b3d6356ad8176e74e7acb6782b540d0",
+    "methods.json": "98e5f6bd046d917a3e8f570250aa8afd391abce99bf8bc5d326fc34e4eec0986"
+  },
+  "limitations": "Bounded annotation generator; no response validation, runtime test pass, Python parity or publication is established by these digests."
+}

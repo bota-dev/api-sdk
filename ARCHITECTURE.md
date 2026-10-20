@@ -18,7 +18,7 @@ not by themselves validate arbitrary server response bodies.
 | Package | Registry identity | Scope |
 | --- | --- | --- |
 | `packages/typescript/` | npm `@bota.dev/api-sdk` | Node-only initial eleven-read cohort |
-| Python target; not implemented | PyPI `bota-api-sdk` | Required future runtime and language parity |
+| `packages/python/` | PyPI `bota-api-sdk` | Experimental async-only eleven-read cohort; independent qualification |
 
 The root npm workspace is private. It owns the dependency lock, governance and
 qualification entry points. The TypeScript package owns generation, maintained
@@ -26,9 +26,20 @@ runtime code, consumer declarations, package inventory and provenance checks.
 Its build uses the pinned TypeScript compiler; React and bundlers are not
 dependencies of this architecture.
 
-Python requires its own implementation, frozen dependency and build inputs,
-strict wire-value handling, behavioral parity cases and distribution checks.
-The approved registry name does not establish any of those gates.
+Python maintains asyncio HTTP policy and uses a bounded standard-library
+generator for methods/TypedDict models over the same pinned public projection.
+Raw response JSON is not coerced or stripped by these annotations. The same
+94 language-neutral cases are supplemented by native transport, timing,
+cancellation, generated surface and distribution checks. Python task
+cancellation propagates `CancelledError`; explicit cancellation events use the
+SDK error contract. Its native transport requests identity encoding and refuses
+unexpected compression; TypeScript's fetch decoding remains a separate policy.
+
+The Python source/build graph uses exact public wheel hashes and installed
+license/declaration checks. A canonical wheel/sdist producer and downstream
+fresh offline consumers bind package bytes across the declared runtime matrix.
+Source, generated proofs and an executable workflow are not their successful
+execution or registry delivery; each keeps a source-bound receipt.
 
 ## Authority and recovery
 
@@ -57,4 +68,4 @@ packed-consumer checks must all pass for the candidate under review.
 Checks bind the candidate's source, generated outputs, declarations and packed
 bytes. Qualification artifacts are evidence for that candidate, not registry
 publication, deployed backend compatibility or physical-device acceptance.
-Publication and any future Python or broader API cohort require separate gates.
+Publication and broader Python or API cohorts require separate gates.

@@ -1,0 +1,36 @@
+[build-system]
+requires = ["flit_core==4.1.0"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "bota-api-sdk"
+version = "0.1.0b0"
+description = "Experimental async Bota API client for the reviewed eleven-read cohort"
+readme = "README.md"
+requires-python = ">=3.12,<3.16"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Bota"}]
+dependencies = ["aiohttp==3.14.5", "yarl==1.25.1"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Source = "https://github.com/bota-dev/api-sdk"
+Documentation = "https://docs.bota.dev"
+
+[tool.flit.module]
+name = "bota_api_sdk"
+
+[tool.ty.rules]
+all = "error"
+
+[tool.ty.analysis]
+respect-type-ignore-comments = false

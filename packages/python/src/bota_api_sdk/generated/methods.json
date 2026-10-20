@@ -1,0 +1,79 @@
+[
+  {
+    "name": "get_auth_identity",
+    "operation_id": "getAuthIdentity",
+    "input": "GetAuthIdentityInput",
+    "response": "GetAuthIdentityResponse",
+    "input_required": false
+  },
+  {
+    "name": "get_end_users",
+    "operation_id": "getEndUsers",
+    "input": "GetEndUsersInput",
+    "response": "GetEndUsersResponse",
+    "input_required": false
+  },
+  {
+    "name": "get_end_users_by_id",
+    "operation_id": "getEndUsersById",
+    "input": "GetEndUsersByIdInput",
+    "response": "GetEndUsersByIdResponse",
+    "input_required": true
+  },
+  {
+    "name": "get_devices",
+    "operation_id": "getDevices",
+    "input": "GetDevicesInput",
+    "response": "GetDevicesResponse",
+    "input_required": false
+  },
+  {
+    "name": "get_devices_by_id",
+    "operation_id": "getDevicesById",
+    "input": "GetDevicesByIdInput",
+    "response": "GetDevicesByIdResponse",
+    "input_required": true
+  },
+  {
+    "name": "get_recordings",
+    "operation_id": "getRecordings",
+    "input": "GetRecordingsInput",
+    "response": "GetRecordingsResponse",
+    "input_required": false
+  },
+  {
+    "name": "get_recordings_by_id",
+    "operation_id": "getRecordingsById",
+    "input": "GetRecordingsByIdInput",
+    "response": "GetRecordingsByIdResponse",
+    "input_required": true
+  },
+  {
+    "name": "get_transcriptions",
+    "operation_id": "getTranscriptions",
+    "input": "GetTranscriptionsInput",
+    "response": "GetTranscriptionsResponse",
+    "input_required": false
+  },
+  {
+    "name": "get_transcriptions_by_id",
+    "operation_id": "getTranscriptionsById",
+    "input": "GetTranscriptionsByIdInput",
+    "response": "GetTranscriptionsByIdResponse",
+    "input_required": true
+  },
+  {
+    "name": "get_summaries",
+    "operation_id": "getSummaries",
+    "input": "GetSummariesInput",
+    "response": "GetSummariesResponse",
+    "input_required": false
+  },
+  {
+    "name": "get_summaries_by_id",
+    "operation_id": "getSummariesById",
+    "input": "GetSummariesByIdInput",
+    "response": "GetSummariesByIdResponse",
+    "input_required": true
+  }
+]
