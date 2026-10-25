@@ -57,7 +57,8 @@ and installed type checks. Its precommit offline wheel/sdist qualification
 passes on development Windows CPython 3.12.14, with repeated byte-identical
 builds and fresh consumers; that dirty-source receipt is not a clean hosted
 runtime matrix result. Exact candidate hashes and subsequent clean-source
-hosted/readback evidence are retained by implementation-plan section 16.
+hosted/readback evidence are retained in the
+[immutable historical qualification ledger](https://github.com/bota-dev/internal-docs/blob/e70c282e796a771cbf2dec8dc77d614a319dc796/plans/2026-10-18-developer-toolchain-implementation.md#164-exact-source-hosted-and-artifact-receipts).
 
 Independent review caught and repaired mutable operation descriptors,
 unsupported required-parameter admission, policy weakening, plain `toJSON`
