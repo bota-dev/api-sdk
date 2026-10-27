@@ -124,6 +124,24 @@ its license with the SDK's MIT license.
 Run `npm run test:licenses` for the policy and synthetic locked-workspace
 fixtures. Root `npm test` includes these checks before the TypeScript tests.
 
+## Security scanning
+
+The pinned `Semgrep` workflow defines the `Scan` check for pull-request events,
+including drafts and forks, without branch or path filters, plus
+merge-queue candidates, main pushes, manual dispatches and the weekly schedule.
+It scans the eligible source tree with security-audit, OWASP, TypeScript,
+Node.js, Python and GitHub Actions rules. Findings, analysis errors and an empty
+scan fail the check. Standard Semgrep language, size and ignore limits apply.
+The workflow uses read-only repository permissions, installs no application
+dependencies and needs no scanner account or cloud credentials.
+
+Each run retains JSON/SARIF results, scanned-file counts, scanner version,
+source and workflow identities, and exact rule snapshots with SHA-256 hashes
+for 90 days. Manual dispatch accepts an optional full 40-character `revision`
+commit SHA; that result is labeled retrospective and does not establish that
+the original PR passed security analysis before merge. Repository rules require
+the literal `Scan` check from GitHub Actions alongside independent review.
+
 ## Authentication and releases
 
 Supply an API key or caller-managed credential provider to the SDK. Keep
