@@ -131,6 +131,8 @@ def refresh() -> None:
     packages = {}
     for name, version in RELEASES.items():
         source = f'https://pypi.org/pypi/{name}/{version}/json'
+        # Only pinned RELEASES entries and this literal HTTPS PyPI origin form the URL.
+        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
         with urllib.request.urlopen(source, timeout=30) as response:
             raw = response.read(8 * 1024 * 1024 + 1)
         if len(raw) > 8 * 1024 * 1024:
