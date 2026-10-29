@@ -10,6 +10,9 @@ updates:
 
   - package-ecosystem: npm
     directory: /
+    # Compiler changes require regenerating and qualifying the pinned cohorts.
+    ignore:
+      - dependency-name: typescript
     schedule:
       interval: weekly
     cooldown:
