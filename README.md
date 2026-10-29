@@ -152,3 +152,7 @@ The approved source license is [MIT](LICENSE). Package names and source licensin
 do not authorize registry publication. This repository has no publish, deploy,
 OIDC or credential-request workflow; registry delivery requires a separately
 qualified release.
+
+### Coordinated toolchain updates
+
+Dependabot does not independently update TypeScript: the exact compiler is recorded in the read and mutation cohorts and their provenance. Compiler changes require coordinated regeneration and qualification of both cohorts; other dependency updates remain enabled.
