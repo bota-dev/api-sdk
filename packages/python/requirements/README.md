@@ -1,7 +1,8 @@
 # Frozen Python dependency inputs
 
 `policy.json` records exact public release metadata and reviewed wheel hashes.
-`runtime.txt` pins the ten-package runtime closure on Python 3.12; the conditional
+`runtime.txt` pins the ten-package runtime closure, including multidict 7.2.0,
+on Python 3.12; the conditional
 typing extension is absent on 3.13 and later. `qualification.txt` adds only
 flit_core 4.1.0 and ty 0.0.91. No extras or source-build fallback are selected.
 

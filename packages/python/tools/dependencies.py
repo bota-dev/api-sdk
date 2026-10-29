@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 RELEASES = {
     'aiohappyeyeballs': '2.7.1', 'aiohttp': '3.14.5', 'aiosignal': '1.4.0',
     'attrs': '26.1.0', 'flit-core': '4.1.0', 'frozenlist': '1.8.0',
-    'idna': '3.20', 'multidict': '7.1.0', 'propcache': '0.5.4',
+    'idna': '3.20', 'multidict': '7.2.0', 'propcache': '0.5.4',
     'ty': '0.0.91', 'typing-extensions': '4.16.0', 'yarl': '1.25.1',
 }
 LICENSES = {
@@ -131,6 +131,8 @@ def refresh() -> None:
     packages = {}
     for name, version in RELEASES.items():
         source = f'https://pypi.org/pypi/{name}/{version}/json'
+        # Only pinned RELEASES entries and this literal HTTPS PyPI origin form the URL.
+        # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected
         with urllib.request.urlopen(source, timeout=30) as response:
             raw = response.read(8 * 1024 * 1024 + 1)
         if len(raw) > 8 * 1024 * 1024:
