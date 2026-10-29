@@ -88,7 +88,7 @@ On Windows, the virtual environment's interpreter is `Scripts/python.exe`.
 Normal installation is offline; `--fetch` explicitly retrieves hash-locked
 public wheels. Python's [dependency policy](packages/python/requirements/README.md)
 covers its separate runtime/build/type-check graph. Package checks use flit_core
-4.1.0 and ty 0.0.90, with positive and negative installed type consumers.
+4.1.0 and ty 0.0.91, with positive and negative installed type consumers.
 
 The Python CI producer builds one canonical wheel/sdist twice on Ubuntu with
 CPython 3.12.15. Its downstream jobs run source/native checks and install those

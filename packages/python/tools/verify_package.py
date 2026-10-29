@@ -76,7 +76,7 @@ def qualify(python: Path, wheelhouse: Path, lock: Path, output: Path, typechecke
     require(Path(sys.executable).resolve() == python.resolve(), "run_verifier_with_explicit_builder_python")
     if typechecker is not None:
         require(typechecker.is_absolute() and typechecker.is_file(), "explicit_typechecker_required")
-        require(re.fullmatch(r"ty 0\.0\.90(?: \([a-f0-9]{7,40} \d{4}-\d{2}-\d{2}\))?",
+        require(re.fullmatch(r"ty 0\.0\.91(?: \([a-f0-9]{7,40} \d{4}-\d{2}-\d{2}\))?",
                              run(typechecker, ["--version"], output.parent).strip()), "typechecker_version_drift")
     before = git_source()
     require((candidate_dir is None) == (candidate_receipt is None), "paired_canonical_candidate_arguments_required")
@@ -151,7 +151,7 @@ def qualify(python: Path, wheelhouse: Path, lock: Path, output: Path, typechecke
             diagnostics = failed.stdout + failed.stderr
             require(failed.returncode == 1 and all(f"negative.py:{line}:" in diagnostics for line in (6, 7, 9, 11, 12, 13, 14))
                     and "unresolved-import" not in diagnostics, "negative_installed_type_consumer")
-            typed = {"checker": "ty 0.0.90", "positive": positive.strip(), "negative_exit": failed.returncode,
+            typed = {"checker": "ty 0.0.91", "positive": positive.strip(), "negative_exit": failed.returncode,
                      "negative_diagnostics_sha256": digest(diagnostics.encode())}
         require(candidate_path.read_bytes() == (candidate / name).read_bytes(), "candidate_changed_during_install")
         consumers.append({"kind": kind, "directory": str(directory), "runtime": smoke,

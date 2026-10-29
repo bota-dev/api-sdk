@@ -46,7 +46,7 @@ class DependencyPolicyTests(unittest.TestCase):
         self.assertEqual(policy_module.recognized_license({'expression': None, 'legacy': None, 'classifiers': ['License :: OSI Approved :: MIT License']}), 'MIT')
 
     def test_source_version_inventory_and_license_drift_refuse(self):
-        mutations = [lambda x: x['packages'].pop('ty'), lambda x: x['packages']['ty'].update(version='0.0.91'),
+        mutations = [lambda x: x['packages'].pop('ty'), lambda x: x['packages']['ty'].update(version='0.0.90'),
                      lambda x: x['packages']['ty'].update(source='https://foreign.example/ty'),
                      lambda x: x['packages']['ty'].update(admitted_license='Apache-2.0')]
         for mutation in mutations:

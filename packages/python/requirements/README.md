@@ -4,7 +4,7 @@
 `runtime.txt` pins the ten-package runtime closure, including multidict 7.2.0,
 on Python 3.12; the conditional
 typing extension is absent on 3.13 and later. `qualification.txt` adds only
-flit_core 4.1.0 and ty 0.0.90. No extras or source-build fallback are selected.
+flit_core 4.1.0 and ty 0.0.91. No extras or source-build fallback are selected.
 
 Use an explicit virtual environment and `tools/install_dependencies.py` with
 an absolute wheelhouse path. `--fetch` explicitly downloads reviewed public
@@ -36,14 +36,15 @@ does not replace them.
 
 The [aiohttp release](https://pypi.org/pypi/aiohttp/3.14.5/json),
 [flit_core release](https://pypi.org/pypi/flit_core/4.1.0/json) and
-[ty release](https://pypi.org/pypi/ty/0.0.90/json) metadata are primary inputs.
+[ty release](https://pypi.org/pypi/ty/0.0.91/json) metadata are primary inputs.
 The checker uses the MIT ty distribution with no Python dependencies; mypy's
 pathspec and HTTPX's certifi would introduce MPL dependencies under the current
 license policy. This choice does not certify native transport or typing: actual
 runtime, positive/negative type and packed-consumer checks remain mandatory.
 
 Dependency updates must keep `tools/dependencies.py` release pins, `policy.json`
-and both generated hash locks synchronized; editing a requirements file alone
+and both generated hash locks synchronized. The packed-consumer verifier also
+pins the qualified ty version. Editing a requirements file alone
 is rejected before installation.
 
 Refreshing metadata is an explicit dependency change: run

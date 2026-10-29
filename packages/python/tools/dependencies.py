@@ -15,7 +15,7 @@ RELEASES = {
     'aiohappyeyeballs': '2.7.1', 'aiohttp': '3.14.5', 'aiosignal': '1.4.0',
     'attrs': '26.1.0', 'flit-core': '4.1.0', 'frozenlist': '1.8.0',
     'idna': '3.20', 'multidict': '7.2.0', 'propcache': '0.5.4',
-    'ty': '0.0.90', 'typing-extensions': '4.16.0', 'yarl': '1.25.1',
+    'ty': '0.0.91', 'typing-extensions': '4.16.0', 'yarl': '1.25.1',
 }
 LICENSES = {
     'aiohappyeyeballs': 'PSF-2.0', 'aiohttp': 'Apache-2.0 AND MIT',
