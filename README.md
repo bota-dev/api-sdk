@@ -126,6 +126,11 @@ fixtures. Root `npm test` includes these checks before the TypeScript tests.
 
 ## Security scanning
 
+Title/body-only PR edits skip runner allocation under a noncanonical check name
+and a separate concurrency group; they cannot replace or cancel the required
+source `Scan`. Base retargets and unknown edit payloads still scan. GitHub may
+display the unevaluated name expression for a skipped job.
+
 The pinned `Semgrep` workflow defines the `Scan` check for pull-request events,
 including drafts and forks, without branch or path filters, plus
 merge-queue candidates, main pushes, manual dispatches and the weekly schedule.
