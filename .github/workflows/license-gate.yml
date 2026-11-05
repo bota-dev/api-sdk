@@ -75,5 +75,4 @@ jobs:
             --registry=https://registry.npmjs.org --update-notifier=false \
             --userconfig="$config_root/user.npmrc" --globalconfig="$config_root/global.npmrc" \
             --cache="$config_root/cache"
-          env -i PATH="$PATH" node --test scripts/check-licenses.test.mjs
           env -i PATH="$PATH" node scripts/check-licenses.mjs

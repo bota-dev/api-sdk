@@ -123,6 +123,8 @@ its license with the SDK's MIT license.
 
 Run `npm run test:licenses` for the policy and synthetic locked-workspace
 fixtures. Root `npm test` includes these checks before the TypeScript tests.
+CI qualifies those policy tests on Node 22 and 24. The separate License Gate
+checks installed dependency licenses without repeating the same policy tests.
 
 ## Security scanning
 
