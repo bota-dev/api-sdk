@@ -133,8 +133,15 @@ its license with the SDK's MIT license.
 
 Run `npm run test:licenses` for the policy and synthetic locked-workspace
 fixtures. Root `npm test` includes these checks before the TypeScript tests.
+CI qualifies those policy tests on Node 22 and 24. The separate License Gate
+checks installed dependency licenses without repeating the same policy tests.
 
 ## Security scanning
+
+Every PR event, including title/body-only edits, runs the real required `Scan`.
+Title/body-only edits use a separate concurrency group so they cannot cancel
+an active source scan. Base retargets and unknown edit payloads retain the
+source concurrency group.
 
 The pinned `Semgrep` workflow defines the `Scan` check for pull-request events,
 including drafts and forks, without branch or path filters, plus
