@@ -15,7 +15,7 @@
   "scripts": {
     "lint": "eslint . --max-warnings=0",
     "check": "node scripts/workspace-command.mjs check",
-    "test": "node --test scripts/check-licenses.test.mjs scripts/workspace-command.test.mjs && node scripts/workspace-command.mjs test",
+    "test": "node --test scripts/check-licenses.test.mjs scripts/workspace-command.test.mjs scripts/eslint-globs.test.mjs && node scripts/workspace-command.mjs test",
     "test:licenses": "node --test scripts/check-licenses.test.mjs",
     "test:workspace": "node --test scripts/workspace-command.test.mjs",
     "build": "node scripts/workspace-command.mjs build",
@@ -24,5 +24,19 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "eslint": "10.13.0"
+  },
+  "overrides": {
+    "@eslint/config-array@0.23.5": {
+      "minimatch": {
+        ".": "11.0.1",
+        "@isaacs/nonrecursive-glob-match": "1.0.1"
+      }
+    },
+    "eslint@10.13.0": {
+      "minimatch": {
+        ".": "11.0.1",
+        "@isaacs/nonrecursive-glob-match": "1.0.1"
+      }
+    }
   }
 }

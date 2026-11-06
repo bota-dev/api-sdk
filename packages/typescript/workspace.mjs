@@ -10,7 +10,7 @@ export const workspaceRoot = fileURLToPath(new URL('../../', import.meta.url));
 export const lockUrl = new URL('../../package-lock.json', import.meta.url);
 export const compilerPath = fileURLToPath(new URL('../../node_modules/typescript/bin/tsc', import.meta.url));
 export const workspaceInputs = ['package.json', 'package-lock.json', 'LICENSE', 'scripts/check-licenses.mjs', 'scripts/check-licenses.test.mjs',
-  'scripts/workspace-command.mjs', 'scripts/workspace-command.test.mjs', 'eslint.config.js'];
+  'scripts/workspace-command.mjs', 'scripts/workspace-command.test.mjs', 'scripts/eslint-globs.test.mjs', 'eslint.config.js'];
 export async function workspaceHashes() {
   const values = {};
   assert.ok((await lstat(workspaceRoot)).isDirectory() && !(await lstat(workspaceRoot)).isSymbolicLink(), 'unsafe_workspace_root');
