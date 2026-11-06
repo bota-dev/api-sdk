@@ -71,6 +71,16 @@ Flat-config ESLint checks maintained JavaScript. Generated outputs and build
 artifacts are excluded; strict TypeScript checks run through the package's
 separate check command.
 
+The private development graph scopes minimatch 11.0.1 to ESLint 10.13.0 and
+config-array 0.23.5, with its new matching helper pinned to 1.0.1. These reviewed
+public releases satisfy the seven-day minimum age and existing license policy.
+The overrides cross those parents' declared minimatch major range; actual
+ESLint/config-array glob selection, ignores, lint errors and bounded pattern
+expansion are checked in both Node cohorts. Keep the overrides attached to
+these exact parent versions until a reviewed parent update supports the fixed
+matcher directly. SDK runtime dependencies and Python wheel inputs retain their
+separate qualification.
+
 For Python, create an explicit normal CPython virtual environment and acquire
 only the reviewed wheels before running source checks:
 

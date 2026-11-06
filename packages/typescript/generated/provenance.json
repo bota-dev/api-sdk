@@ -12,7 +12,7 @@
     "version": "7.13.0"
   },
   "typescript": "5.9.3",
-  "lockSha256": "f8e8f41b9d9805524b966da135dc83fe8c48708c51e772d3d16197c64c711ad3",
+  "lockSha256": "5e652e1184f730a836fbe3ec2517f1e522279703a243d9526b4748f5cc42d406",
   "generatorScriptSha256": "71e4ea4317d730d5c072c78671b7399c818d486a2cf440b7402a17f988710dee",
   "projectionScriptSha256": "7292a63cb3f86af78b03419d1fe59dec1f1d0e293702cb25a225b302a3e01714",
   "headerAdapterScriptSha256": "790ea1fef5940c31e919c304149f0b9326b3c539b580ccbfeeb5ef5b7a5d2107",
@@ -20,6 +20,6 @@
   "schemaSha256": "e6abcec5768db89b950d31a260149be6cd9180824b0d636103e431bee3ff7e80",
   "operationCount": 11,
   "lockScope": "workspace-root",
-  "workspaceScriptSha256": "821df1e48c216435047cbf598995992a4d681f30c625e32cc8b7859dfc086eea",
+  "workspaceScriptSha256": "ce39fa5b241db4c4a59e450cbcb19867eec67f80d21c28c1a8493227b6bc00f9",
   "status": "beta-generation-not-certified-sdk"
 }
