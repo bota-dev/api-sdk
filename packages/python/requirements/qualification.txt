@@ -1,8 +1,9 @@
 # Generated from policy.json; wheel hashes only. No source-build fallback.
 # CPython 3.12-3.15 normal builds; runtime availability is separately qualified.
 -r runtime.txt
-flit-core==4.1.0 \
-    --hash=sha256:17398cdd2c38b24047a5a9c93089ec5c0bf12ec3d1469bbf69c27ed7965299db
+flit-core==4.2.0 \
+    --hash=sha256:2bee22dc8ba89c2e35b4e1ad575e596aac945c85672dd8f3cad21b629036e044 \
+    --hash=sha256:84e4e4d8fdd45ba2613800a3ebc6834de26d47ec9746efc3719f94181137b460
 ty==0.0.92 \
     --hash=sha256:020ccc79656c0d0f8f353e5e0760988775cdaa253fa4427e265ed96b4994e7fe \
     --hash=sha256:2088a253b98f04851e261e8e597b384988b790075451ff47b011e6018bf8bc80 \
